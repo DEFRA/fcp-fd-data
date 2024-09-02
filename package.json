@@ -15,7 +15,10 @@
     "start:debug": "nodemon --inspect-brk=0.0.0.0 --ext js --legacy-watch app/index.js"
   },
   "author": "Defra",
-  "contributors": [],
+  "contributors": [
+    "Abidemi Adio <abidemi.adio@defra.gov.uk>",
+    "Simon Dunn <simon.dunn1@defra.gov.uk>"
+  ],
   "license": "OGL-UK-3.0",
   "dependencies": {
     "@hapi/hapi": "21.3.2",
