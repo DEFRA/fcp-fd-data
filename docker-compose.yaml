@@ -1,10 +1,10 @@
 services:
-  ffc-template-node:
+  fcp-fd-data:
     build:
       context: .
       target: production
-    image: ffc-template-node
-    container_name: ffc-template-node
+    image: fcp-fd-data
+    container_name: fcp-fd-data
     environment:
-      APPINSIGHTS_CLOUDROLE: ffc-template-node-local
+      APPINSIGHTS_CLOUDROLE: fcp-fd-data-local
       APPINSIGHTS_CONNECTIONSTRING: ${APPINSIGHTS_CONNECTIONSTRING}
