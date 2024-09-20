@@ -1,0 +1,5 @@
+{{- if .Values.usePodIdentity }}
+{{- include "ffc-helm-library.azure-identity" (list . "fcp-fd-data.azure-identity") -}}
+{{- end }}
+{{- define "fcp-fd-data.azure-identity" -}}
+{{- end -}}
