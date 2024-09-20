@@ -9,7 +9,7 @@ services:
     container_name: fcp-fd-data-development
     ports:
       - "3004:3004"
-      - "9229:9229"
+      - "9004:9229"
     volumes:
       - ./app:/home/node/app
       - ./package.json:/home/node/package.json
