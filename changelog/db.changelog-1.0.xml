@@ -3,4 +3,16 @@
     <changeSet author="DEFRA" id="1">
       <tagDatabase tag="v1.0.0" />
     </changeSet>
+    <changeSet author="Defra" id="2">
+    <createTable tableName="test">
+      <column autoIncrement="true" name="id" type="INTEGER">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="id_pkey" />
+      </column>
+      <column name="message" type="VARCHAR(100)" />
+    </createTable>
+    <insert tableName="test">
+      <column name="id" value="1" />
+      <column name="message" value="hello world" />
+    </insert>
+  </changeSet>
 </databaseChangeLog>

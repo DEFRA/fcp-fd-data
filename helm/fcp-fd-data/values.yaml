@@ -43,6 +43,14 @@ readinessProbe:
   failureThreshold: 3
   timeoutSeconds: 5
 
+postgresService:
+  postgresDb: fcp_fd_data
+  postgresExternalName:
+  postgresHost: fcp-fd-data-postgres
+  postgresPort: 5432
+  postgresSchema: public
+  postgresUser: postgres
+
 usePodIdentity: true
 
 azureIdentity:

@@ -37,7 +37,7 @@ services:
       - ./scripts:/scripts
 
   fcp-fd-data-postgres:
-    image: postgres:15
+    image: postgres:16.4-alpine
     environment: *common-postgres
     volumes:
       - postgres_data:/var/lib/postgresql/data
