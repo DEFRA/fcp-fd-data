@@ -1,10 +1,10 @@
 export default (sequelize, DataTypes) => {
-  return sequelize.define('test', {
+  return sequelize.define('initial', {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     message: DataTypes.STRING
   },
   {
-    tableName: 'test',
+    tableName: 'initial',
     freezeTableName: true,
     timestamps: false
   })
