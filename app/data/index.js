@@ -4,9 +4,9 @@ import { fileURLToPath } from 'url'
 import { Sequelize, DataTypes } from 'sequelize'
 import { databaseConfig } from '../config/index.js'
 
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
-const modelPath = path.join(__dirname, 'models')
+const filename = fileURLToPath(import.meta.url)
+const dirname = path.dirname(filename)
+const modelPath = path.join(dirname, 'models')
 
 const db = {}
 
