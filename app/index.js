@@ -1,9 +1,20 @@
+import hapiApollo from '@as-integrations/hapi'
 import { setup } from './insights.js'
 import 'log-timestamp'
-import { createServer } from './server.js'
+import { server } from './server.js'
+import { apolloServer } from './graphql/apollo-server.js'
 
 const init = async () => {
-  const server = await createServer()
+  await apolloServer.start()
+
+  await server.register({
+    plugin: hapiApollo.default,
+    options: {
+      apolloServer,
+      path: '/graphql'
+    }
+  })
+
   await server.start()
   console.log('Server running on %s', server.info.uri)
 }

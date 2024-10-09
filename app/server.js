@@ -1,30 +1,45 @@
 import Hapi from '@hapi/hapi'
-import HapiPino from 'hapi-pino'
-import Joi from 'joi'
-import healthy from './routes/healthy.js'
-import healthz from './routes/healthz.js'
 
-const createServer = () => {
-  const server = Hapi.server({
-    port: process.env.PORT
-  })
+const server = Hapi.server({
+  port: process.env.PORT
+})
 
-  const routes = [].concat(
-    healthy,
-    healthz
-  )
+const healthyRoute = (await import('./routes/healthy.js')).default
+const healthzRoute = (await import('./routes/healthz.js')).default
 
-  server.validator(Joi)
-  server.route(routes)
-  server.register({
-    plugin: HapiPino,
-    options: {
-      logPayload: true,
-      level: 'warn'
-    }
-  })
+const routes = [healthyRoute, healthzRoute]
 
-  return server
-}
+server.route(routes)
 
-export { createServer }
+export { server }
+
+// import Hapi from '@hapi/hapi'
+// import HapiPino from 'hapi-pino'
+// import Joi from 'joi'
+// import healthy from './routes/healthy.js'
+// import healthz from './routes/healthz.js'
+
+// const createServer = () => {
+//   const server = Hapi.server({
+//     port: process.env.PORT
+//   })
+
+//   const routes = [].concat(
+//     healthy,
+//     healthz
+//   )
+
+//   server.validator(Joi)
+//   server.route(routes)
+//   server.register({
+//     plugin: HapiPino,
+//     options: {
+//       logPayload: true,
+//       level: 'warn'
+//     }
+//   })
+
+//   return server
+// }
+
+// export { createServer }
