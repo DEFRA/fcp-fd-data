@@ -36,4 +36,3 @@ const importModels = async () => {
 }
 
 export default await importModels()
-
