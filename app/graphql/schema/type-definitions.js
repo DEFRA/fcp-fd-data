@@ -1,7 +1,7 @@
 const typeDefs = `#graphql
 
 type Query {
-  messages: [Message]
+  allMessages: [Message]
   messageById(id: ID!): Message
 }
 

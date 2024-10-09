@@ -1,17 +1,13 @@
 import db from '../../../data/index.js'
 
 const messageById = async (_root, args, context) => {
-  const querySpec = {
-    query: 'SELECT * FROM initial i WHERE i.id = @id',
-    parameters: [{ name: '@id', value: `${args.id}` }]
-  }
-
-  const response = await db.query(querySpec)
-  const message = response.rows[0]
+  const response = await db.initial.findOne({
+    where: { id: args.id }
+  })
 
   return {
-    id: message.id,
-    message: message.message
+    id: response.id,
+    message: response.message
   }
 }
 

@@ -1,5 +1,6 @@
 import {
-  messageById
+  messageById,
+  allMessages
 } from './queries/index.js'
 
 import {
@@ -8,7 +9,8 @@ import {
 
 const resolvers = {
   Query: {
-    messageById
+    messageById,
+    allMessages
   },
   Mutation: {
     createMessage

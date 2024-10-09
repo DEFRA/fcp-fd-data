@@ -12,7 +12,7 @@ const db = {}
 
 const sequelize = new Sequelize(databaseConfig.database, databaseConfig.username, databaseConfig.password, databaseConfig)
 
-const importModels = async () => {
+const models = async () => {
   const files = fs.readdirSync(modelPath)
     .filter(file => {
       return (file.indexOf('.') !== 0) && (file !== 'index.js') && (file.slice(-3) === '.js')
@@ -35,4 +35,4 @@ const importModels = async () => {
   return db
 }
 
-export default await importModels()
+export default await models()
