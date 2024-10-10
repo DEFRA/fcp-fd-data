@@ -2,9 +2,6 @@ import { DefaultAzureCredential } from '@azure/identity'
 import environments from '../constants/environments.js'
 
 const isProd = () => {
-  console.log('NODE_ENV:', process.env.NODE_ENV)
-  console.log('env.prod:', environments.PRODUCTION)
-
   return process.env.NODE_ENV === environments.PRODUCTION
 }
 
