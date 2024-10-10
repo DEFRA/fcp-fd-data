@@ -1,8 +1,11 @@
 import { DefaultAzureCredential } from '@azure/identity'
-import { PRODUCTION } from '../constants/environments.js'
+import environments from '../constants/environments.js'
 
 const isProd = () => {
-  return process.env.NODE_ENV === PRODUCTION
+  console.log('NODE_ENV:', process.env.NODE_ENV)
+  console.log('env.prod:', environments.PRODUCTION)
+
+  return process.env.NODE_ENV === environments.PRODUCTION
 }
 
 const hooks = {
