@@ -1,6 +1,16 @@
-import { jest } from '@jest/globals'
+import { expect, jest } from '@jest/globals'
 // import config from '../../../app/config/database.js'
 const configPath = '../../../app/config/database.js'
+
+jest.mock('@azure/identity', () => {
+  return {
+    DefaultAzureCredential: jest.fn().mockImplementation(() => {
+      return {
+        getToken: jest.fn().mockResolvedValue({ token: 'mocked-access-token' })
+      }
+    })
+  }
+})
 
 describe('Database Configuration', () => {
   beforeEach(() => {
@@ -8,22 +18,29 @@ describe('Database Configuration', () => {
   })
 
   test('should set ssl to false when NODE_ENV is "development"', async () => {
-    process.env.NODE_ENV = 'development' // this is not being set correctly, possibly the way I am importing it
-    const result = await import(configPath)
-    expect(result.default.dialectOptions.ssl).toBe(false)
+    process.env.NODE_ENV = 'development'
+    const config = await import(configPath)
+    expect(config.default.dialectOptions.ssl).toBe(false)
   })
 
   test('should set ssl to true when NODE_ENV is "production"', async () => {
-    process.env.NODE_ENV = 'production' // this is not being set correctly, possibly the way I am importing it
-    const result = await import(configPath)
-    expect(result.default.dialectOptions.ssl).toBe(true)
+    process.env.NODE_ENV = 'production'
+    const config = await import(configPath)
+    expect(config.default.dialectOptions.ssl).toBe(true)
   })
 
-  // test('should have the correct dialect', () => {
-  //   // Test code for dialect
-  // })
+  test('should not update config.password when NODE_ENV is "production"', async () => {
+    process.env.NODE_ENV = 'development'
+    const config = await import(configPath)
+    await config.default.hooks.beforeConnect(config.default)
+    expect(config.default.password).toBeUndefined()
+  })
 
-  // test('should have the correct host', () => {
-  //   // Test code for host
-  // })
+  test('should update config.password when NODE_ENV is "development"', async () => {
+    // continue from here
+    process.env.NODE_ENV = 'production'
+    const config = await import(configPath)
+    await config.default.hooks.beforeConnect(config.default)
+    expect(config.default.password).toBe('mocked-access-token')
+  })
 })
