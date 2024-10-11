@@ -1,5 +1,4 @@
 import { expect, jest } from '@jest/globals'
-// import config from '../../../app/config/database.js'
 const configPath = '../../../app/config/database.js'
 
 jest.mock('@azure/identity', () => {
@@ -37,7 +36,6 @@ describe('Database Configuration', () => {
   })
 
   test('should update config.password when NODE_ENV is "development"', async () => {
-    // continue from here
     process.env.NODE_ENV = 'production'
     const config = await import(configPath)
     await config.default.hooks.beforeConnect(config.default)
