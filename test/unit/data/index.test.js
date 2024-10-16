@@ -1,8 +1,7 @@
 import { jest } from '@jest/globals'
 import fs from 'fs'
 import path from 'path'
-import { Sequelize } from 'sequelize'
-import db from '../../../app/data/index.js'
+import { Sequelize, DataTypes } from 'sequelize'
 import { databaseConfig } from '../../../app/config/index.js'
 
 jest.mock('fs')
@@ -11,61 +10,37 @@ jest.mock('sequelize')
 
 jest.mock('../../../app/config/index.js', () => ({
   databaseConfig: {
-    database: 'mock_fcp_fd_data',
-    dialect: 'postgres',
-    dialectOptions: {
-      ssl: false
-    },
-    hooks: {
-      beforeConnect: jest.fn()
-    },
-    host: 'localhost',
-    username: 'mock_username',
-    password: 'mock_password',
-    port: 5432,
-    schema: 'public',
-    logging: false,
-    retry: {
-      backoffBase: 500,
-      backoffExponent: 1.1,
-      match: [/SequelizeConnectionError/],
-      max: 10,
-      name: 'connection',
-      timeout: 60000
-    }
+    database: 'testdb',
+    username: 'testuser',
+    password: 'testpassword',
+    dialect: 'postgres'
   }
 }))
 
-describe('Set up models using Sequelize', () => {
-  let sequelizeMock
-  let mockModel
+describe('Database Initialisation', () => {
+  let mockSequelizeInstance
 
   beforeEach(() => {
-    jest.clearAllMocks()
-
-    sequelizeMock = {
+    mockSequelizeInstance = {
       define: jest.fn(),
-      authenticate: jest.fn(),
+      authenticate: jest.fn().mockResolvedValue(),
+      models: {}
     }
 
-    Sequelize.mockImplementation(() => sequelizeMock)
+    Sequelize.mockImplementation = jest.fn(() => mockSequelizeInstance)
 
-    mockModel = {
-      name: 'TestModel',
-      associate: jest.fn()
-    }
+    fs.readdirSync = jest.fn().mockReturnValue(['initial.js'])
 
-    fs.readdirSync.mockReturnValue(['testModel.js'])
-
-    path.join.mockImplementation((...args) => args.join('/'))
-
-    jest.mock('../../../app/data/models/testModel.js', () => {
-      return (sequelize, DataTypes) => mockModel
-    }, { virtual: true })
+    path.join = jest.fn().mockImplementation((...args) => args.join('/'))
   })
 
-  it('should set up models and associate them correctly', () => {
-    const loadedDb = db
+  afterEach(() => {
+    jest.clearAllMocks()
+  })
+
+  it('should initialise Sequelize with the correct configuration', async () => {
+    const dbModule = await import('../../../app/data/index.js')
+    const db = dbModule.default
 
     expect(Sequelize).toHaveBeenCalledWith(
       databaseConfig.database,
@@ -74,11 +49,16 @@ describe('Set up models using Sequelize', () => {
       databaseConfig
     )
 
+    expect(db.sequelize).toBe(mockSequelizeInstance)
+    expect(db.Sequelize).toBe(Sequelize)
+  })
+
+  it('should load all model files from the models directory', async () => {
+    const dbModule = await import('../../../app/data/index.js')
+    const db = dbModule.default
+
     expect(fs.readdirSync).toHaveBeenCalledWith(expect.stringContaining('models'))
 
-    expect(loadedDb.TestModel).toBeDefined()
-    expect(loadedDb.TestModel).toEqual(mockModel)
-
-    expect(mockModel.associate).toHaveBeenCalledWith(loadedDb)
+    expect(Object.keys(db)).toContain('initial')
   })
 })

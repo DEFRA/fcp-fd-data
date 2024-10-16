@@ -1,37 +1,27 @@
-import { readdirSync } from 'fs'
-import { basename, dirname, join } from 'path'
-import { Sequelize, DataTypes } from 'sequelize'
+import fs from 'fs'
+import path from 'path'
 import { fileURLToPath } from 'url'
-import config from '../config/index.js'
+import { Sequelize, DataTypes } from 'sequelize'
+import { databaseConfig } from '../config/index.js'
 
 const filename = fileURLToPath(import.meta.url)
-console.log('filename', filename)
-const directoryName = dirname(filename)
-console.log('directoryName', directoryName)
-const modelPath = join(directoryName, 'models')
-console.log('modelPath', modelPath)
+const dirname = path.dirname(filename)
+const modelPath = path.join(dirname, 'models')
+
 const db = {}
-const sequelize = new Sequelize(config.databaseConfig.database, config.databaseConfig.username, config.databaseConfig.password, config.databaseConfig)
+const sequelize = new Sequelize(databaseConfig.database, databaseConfig.username, databaseConfig.password, databaseConfig)
 
-const files = readdirSync(modelPath)
-  .filter(
-    (file) => file.indexOf('.') !== 0 &&
-    file !== basename(filename) &&
-    file.slice(-3) === '.js'
-  )
-console.log(files)
+const files = fs.readdirSync(modelPath)
+  .filter(file => {
+    return (file.indexOf('.') !== 0) && (file !== 'index.js') && (file.slice(-3) === '.js')
+  })
 
-await Promise.all(files.map(async file => {
-  const model = await import(`./${file}`)
-  if (!model.default) {
-    return
-  }
+for (const file of files) {
+  const model = (await import(path.join(modelPath, file))).default(sequelize, DataTypes)
+  db[model.name] = model
+}
 
-  const namedModel = model.default(sequelize, DataTypes)
-  db[namedModel.name] = namedModel
-}))
-
-Object.keys(db).forEach((modelName) => {
+Object.keys(db).forEach(modelName => {
   if (db[modelName].associate) {
     db[modelName].associate(db)
   }
