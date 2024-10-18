@@ -5,6 +5,15 @@ services:
       target: production
     image: fcp-fd-data
     container_name: fcp-fd-data
+    depends_on: 
+      - fcp-fd-data-postgres
     environment:
       APPINSIGHTS_CLOUDROLE: fcp-fd-data-local
       APPINSIGHTS_CONNECTIONSTRING: ${APPINSIGHTS_CONNECTIONSTRING}
+  
+  fcp-fd-data-postgres:
+    image: postgres:16.4-alpine
+    environment:
+      POSTGRES_DB: fcp-fd-data
+      POSTGRES_PASSWORD: ppp
+      POSTGRES_USERNAME: postgres

@@ -8,8 +8,19 @@ services:
     image: fcp-fd-data-development
     container_name: fcp-fd-data-development
     ports:
-      - "3004:3004"
-      - "9004:9229"
+      - "3033:3033"
+      - "9033:9229"
     volumes:
       - ./app:/home/node/app
+      - ./test:/home/node/test
+      - ./scripts:/home/node/scripts
       - ./package.json:/home/node/package.json
+
+  fcp-fd-data-postgres:
+    ports:
+      - "5033:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:

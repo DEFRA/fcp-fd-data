@@ -25,11 +25,11 @@ container:
   requestCpu: 100m
   limitMemory: 100Mi
   limitCpu: 100m
-  port: 3004
+  port: 3033
 
 livenessProbe:
   path: /healthz
-  port: 3004
+  port: 3033
   initialDelaySeconds: 20
   periodSeconds: 10
   failureThreshold: 3
@@ -37,11 +37,19 @@ livenessProbe:
 
 readinessProbe:
   path: /healthy
-  port: 3004
+  port: 3033
   initialDelaySeconds: 30
   periodSeconds: 10
   failureThreshold: 3
   timeoutSeconds: 5
+
+postgresService:
+  postgresDb: fcp_fd_data
+  postgresExternalName:
+  postgresHost: fcp-fd-data-postgres
+  postgresPort: 5432
+  postgresSchema: public
+  postgresUser: postgres
 
 usePodIdentity: true
 
