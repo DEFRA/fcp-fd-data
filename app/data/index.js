@@ -9,30 +9,25 @@ const dirname = path.dirname(filename)
 const modelPath = path.join(dirname, 'models')
 
 const db = {}
-
 const sequelize = new Sequelize(databaseConfig.database, databaseConfig.username, databaseConfig.password, databaseConfig)
 
-const models = async () => {
-  const files = fs.readdirSync(modelPath)
-    .filter(file => {
-      return (file.indexOf('.') !== 0) && (file !== 'index.js') && (file.slice(-3) === '.js')
-    })
-
-  for (const file of files) {
-    const model = (await import(path.join(modelPath, file))).default(sequelize, DataTypes)
-    db[model.name] = model
-  }
-
-  Object.keys(db).forEach(modelName => {
-    if (db[modelName].associate) {
-      db[modelName].associate(db)
-    }
+const files = fs.readdirSync(modelPath)
+  .filter(file => {
+    return (file.indexOf('.') !== 0) && (file !== 'index.js') && (file.slice(-3) === '.js')
   })
 
-  db.sequelize = sequelize
-  db.Sequelize = Sequelize
-
-  return db
+for (const file of files) {
+  const model = (await import(path.join(modelPath, file))).default(sequelize, DataTypes)
+  db[model.name] = model
 }
 
-export default await models()
+Object.keys(db).forEach(modelName => {
+  if (db[modelName].associate) {
+    db[modelName].associate(db)
+  }
+})
+
+db.sequelize = sequelize
+db.Sequelize = Sequelize
+
+export default db
