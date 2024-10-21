@@ -1,64 +1,58 @@
-import { jest } from '@jest/globals'
-import fs from 'fs'
-import path from 'path'
-import { Sequelize, DataTypes } from 'sequelize'
-import { databaseConfig } from '../../../app/config/index.js'
+import { expect, jest } from '@jest/globals'
 
-jest.mock('fs')
-jest.mock('path')
-jest.mock('sequelize')
+jest.unstable_mockModule('sequelize', () => {
+  return {
+    Sequelize: jest.fn(() => ({
+      define: jest.fn().mockImplementation((modelName) => {
+        return {
+          name: modelName,
+          associate: jest.fn()
+        }
+      })
+    })),
+    DataTypes: {
+      INTEGER: 'INTEGER',
+      STRING: 'STRING'
+    }
+  }
+})
 
-jest.mock('../../../app/config/index.js', () => ({
+jest.unstable_mockModule('../../../app/config/index.js', () => ({
   databaseConfig: {
     database: 'testdb',
     username: 'testuser',
-    password: 'testpassword',
-    dialect: 'postgres'
+    password: 'testpassword'
   }
 }))
 
-describe('Database Initialisation', () => {
-  let mockSequelizeInstance
-
+describe('Data Module Tests', () => {
   beforeEach(() => {
-    mockSequelizeInstance = {
-      define: jest.fn(),
-      authenticate: jest.fn().mockResolvedValue(),
-      models: {}
-    }
-
-    Sequelize.mockImplementation = jest.fn(() => mockSequelizeInstance)
-
-    fs.readdirSync = jest.fn().mockReturnValue(['initial.js'])
-
-    path.join = jest.fn().mockImplementation((...args) => args.join('/'))
+    jest.resetAllMocks()
+    jest.resetModules()
   })
 
-  afterEach(() => {
-    jest.clearAllMocks()
+  test('should create new sequelize object with mockConfig values', async () => {
+    const mockConfig = (await import('../../../app/config/index.js')).databaseConfig
+    const mockSequelize = (await import('sequelize')).Sequelize
+    await import('../../../app/data/index.js')
+    expect(mockSequelize).toBeCalledWith(mockConfig.database, mockConfig.username, mockConfig.password, mockConfig)
   })
 
-  it('should initialise Sequelize with the correct configuration', async () => {
+  test('should call mockSequelize once', async () => {
+    const mockSequelize = (await import('sequelize')).Sequelize
+    await import('../../../app/data/index.js')
+    expect(mockSequelize).toBeCalledTimes(1)
+  })
+
+  test('should set "initial" as a property of the database object', async () => {
     const dbModule = await import('../../../app/data/index.js')
     const db = dbModule.default
-
-    expect(Sequelize).toHaveBeenCalledWith(
-      databaseConfig.database,
-      databaseConfig.username,
-      databaseConfig.password,
-      databaseConfig
-    )
-
-    expect(db.sequelize).toBe(mockSequelizeInstance)
-    expect(db.Sequelize).toBe(Sequelize)
+    expect(db.initial).toBeDefined()
   })
 
-  it('should load all model files from the models directory', async () => {
+  test('should set "initial" as a property of the database object with "name" of "initial" and "associate" as a function', async () => {
     const dbModule = await import('../../../app/data/index.js')
     const db = dbModule.default
-
-    expect(fs.readdirSync).toHaveBeenCalledWith(expect.stringContaining('models'))
-
-    expect(Object.keys(db)).toContain('initial')
+    expect(db.initial).toEqual({ name: 'initial', associate: expect.any(Function) })
   })
 })
