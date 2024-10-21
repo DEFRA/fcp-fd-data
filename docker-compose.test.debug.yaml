@@ -1,5 +1,5 @@
 services:
   fcp-fd-data:
-    command: sh -c "git config --global --add safe.directory /home/node/.git && npm run test:debug"
+    command: npm run test:debug
     ports:
       - "9033:9229"
