@@ -6,6 +6,7 @@ jest.setTimeout(30000)
 beforeEach(async () => {
   try {
     // console.log(db)
+    await db.sequelize.sync({ force: true })
     await db.sequelize.truncate({ cascade: true })
     await db.initial.create({ message: 'Hello, World!' })
   } catch (error) {
@@ -14,13 +15,13 @@ beforeEach(async () => {
 })
 
 afterEach(async () => {
-  // await db.sequelize.truncate({ cascade: true })
   await db.sequelize.close()
 })
 
 describe('Database Config Tests', () => {
   test('should return data from the database', async () => {
     const result = await db.initial.findAll()
-    expect(result).toEqual([{ id: 1, message: 'Hello, World!' }])
+    const plainResult = result.map(record => record.get({ plain: true }))
+    expect(plainResult).toEqual([{ id: 1, message: 'Hello, World!' }])
   })
 })

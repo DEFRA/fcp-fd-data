@@ -14,6 +14,7 @@ jest.mock('@azure/identity', () => {
 describe('Database Configuration', () => {
   beforeEach(() => {
     jest.resetModules()
+    process.env.NODE_ENV = ''
   })
 
   test('should set ssl to false when NODE_ENV is "development"', async () => {
@@ -29,6 +30,7 @@ describe('Database Configuration', () => {
   })
 
   test('should not update config.password when NODE_ENV is "production"', async () => {
+    delete process.env.POSTGRES_PASSWORD
     process.env.NODE_ENV = 'development'
     const config = await import(configPath)
     await config.default.hooks.beforeConnect(config.default)
@@ -36,6 +38,7 @@ describe('Database Configuration', () => {
   })
 
   test('should update config.password when NODE_ENV is "development"', async () => {
+    delete process.env.POSTGRES_PASSWORD
     process.env.NODE_ENV = 'production'
     const config = await import(configPath)
     await config.default.hooks.beforeConnect(config.default)
