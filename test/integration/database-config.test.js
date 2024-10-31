@@ -5,8 +5,6 @@ jest.setTimeout(30000)
 
 beforeEach(async () => {
   try {
-    // console.log(db)
-    await db.sequelize.sync({ force: true })
     await db.sequelize.truncate({ cascade: true })
     await db.initial.create({ message: 'Hello, World!' })
   } catch (error) {
