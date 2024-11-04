@@ -31,4 +31,28 @@ describe('Database Configuration', () => {
     await config.default.hooks.beforeConnect(config.default)
     expect(config.default.password).toBe('mocked-access-token')
   })
+
+  test('should update config.database when env is undefined "', async () => {
+    delete process.env.POSTGRES_DB
+    const config = await import(configPath)
+    expect(config.default.database).toBe('fcp_fd_data')
+  })
+
+  test('should update config.host when env is undefined ', async () => {
+    delete process.env.POSTGRES_HOST
+    const config = await import(configPath)
+    expect(config.default.host).toBe('fcp-fd-data-postgres')
+  })
+
+  test('should update config.port when env is undefined ', async () => {
+    delete process.env.POSTGRES_PORT
+    const config = await import(configPath)
+    expect(config.default.port).toBe(5432)
+  })
+
+  test('should update config.schema when env is undefined ', async () => {
+    delete process.env.POSTGRES_SCHEMA_NAME
+    const config = await import(configPath)
+    expect(config.default.schema).toBe('public')
+  })
 })
