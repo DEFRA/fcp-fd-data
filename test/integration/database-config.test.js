@@ -1,4 +1,3 @@
-import { expect } from '@jest/globals'
 import db from '../../app/data/index.js'
 
 beforeEach(async () => {
@@ -6,13 +5,19 @@ beforeEach(async () => {
   await db.initial.create({ message: 'Hello, World!' })
 })
 
-afterEach(async () => {
+afterAll(async () => {
   await db.sequelize.close()
 })
 
-describe('Database Config Tests', () => {
+describe('Database connection', () => {
   test('should return data from the database', async () => {
     const result = await db.initial.findAll()
     expect(result).toHaveLength(1)
+  })
+
+  test('should not update config.password when NODE_ENV is "production"', async () => {
+    delete process.env.POSTGRES_PASSWORD
+    process.env.NODE_ENV = 'development'
+    expect(db.password).toBeUndefined()
   })
 })
