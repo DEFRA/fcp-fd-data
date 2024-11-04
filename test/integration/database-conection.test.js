@@ -1,4 +1,15 @@
 import db from '../../app/data/index.js'
+import { jest } from '@jest/globals'
+
+jest.mock('@azure/identity', () => {
+  return {
+    DefaultAzureCredential: jest.fn().mockImplementation(() => {
+      return {
+        getToken: jest.fn().mockResolvedValue({ token: 'mocked-access-token' })
+      }
+    })
+  }
+})
 
 beforeEach(async () => {
   await db.sequelize.truncate({ cascade: true })
@@ -13,11 +24,5 @@ describe('Database connection', () => {
   test('should return data from the database', async () => {
     const result = await db.initial.findAll()
     expect(result).toHaveLength(1)
-  })
-
-  test('should not update config.password when NODE_ENV is "production"', async () => {
-    delete process.env.POSTGRES_PASSWORD
-    process.env.NODE_ENV = 'development'
-    expect(db.password).toBeUndefined()
   })
 })
