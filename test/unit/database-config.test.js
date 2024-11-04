@@ -16,7 +16,7 @@ describe('Database Configuration', () => {
     process.env.NODE_ENV = ''
   })
 
-  test('should not update config.password when NODE_ENV is "production"', async () => {
+  test('should not update config.password when NODE_ENV is "development"', async () => {
     delete process.env.POSTGRES_PASSWORD
     process.env.NODE_ENV = 'development'
     const config = await import(configPath)
@@ -24,7 +24,7 @@ describe('Database Configuration', () => {
     expect(config.default.password).toBeUndefined()
   })
 
-  test('should update config.password when NODE_ENV is "development"', async () => {
+  test('should update config.password when NODE_ENV is "production"', async () => {
     delete process.env.POSTGRES_PASSWORD
     process.env.NODE_ENV = 'production'
     const config = await import(configPath)
