@@ -5,7 +5,6 @@ describe('Application Insights', () => {
   let applicationInsights
 
   beforeEach(async () => {
-    // important to clear the cache when mocking environment variables
     jest.resetModules()
     jest.mock('applicationinsights', () => {
       return {
