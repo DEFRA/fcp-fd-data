@@ -1,15 +1,4 @@
 import db from '../../app/data/index.js'
-import { jest } from '@jest/globals'
-
-jest.mock('@azure/identity', () => {
-  return {
-    DefaultAzureCredential: jest.fn().mockImplementation(() => {
-      return {
-        getToken: jest.fn().mockResolvedValue({ token: 'mocked-access-token' })
-      }
-    })
-  }
-})
 
 beforeEach(async () => {
   await db.sequelize.truncate({ cascade: true })
