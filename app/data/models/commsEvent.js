@@ -1,6 +1,6 @@
 import { DataTypes } from 'sequelize'
 
-const defineCommsEvent = (sequelize) => {
+const commsEventModel = (sequelize) => {
   const commsEvent = sequelize.define('commsEvent', {
     id: {
       type: DataTypes.STRING(36),
@@ -25,4 +25,4 @@ const defineCommsEvent = (sequelize) => {
   return commsEvent
 }
 
-export default defineCommsEvent
+export default commsEventModel

@@ -31,7 +31,7 @@
     "joi": "17.13.3",
     "log-timestamp": "0.3.0",
     "pg": "8.13.0",
-    "sequelize": "^6.37.4"
+    "sequelize": "^6.37.5"
   },
   "devDependencies": {
     "jest": "29.7.0",
