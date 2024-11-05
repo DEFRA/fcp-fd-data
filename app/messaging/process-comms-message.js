@@ -9,9 +9,15 @@ const processCommsMessage = async (message, receiver, commsEventModel) => {
       await receiver.abandonMessage(message)
       return
     }
-    await commsEventModel.create(validData)
+
+    const commsMessageWithTimeStamp = {
+      ...validData,
+      dateCreated: new Date()
+    }
+
+    await commsEventModel.create(commsMessageWithTimeStamp)
     await receiver.completeMessage(message)
-    console.log('Message processed successfully:', validData)
+    console.log('Message processed successfully:', commsMessageWithTimeStamp)
   } catch (err) {
     console.error('Unable to process request:', err)
     await receiver.abandonMessage(message)
