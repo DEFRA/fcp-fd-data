@@ -48,7 +48,7 @@ readinessProbe:
 postgresService:
   postgresDb: fcp_fd_data
   postgresExternalName:
-  postgresHost: fcp-fd-data-postgres
+  postgresqlHost: fcp-fd-data-postgres
   postgresPort: 5432
   postgresSchema: public
   postgresUser: postgres
