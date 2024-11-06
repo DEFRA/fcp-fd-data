@@ -1,6 +1,6 @@
 import Joi from 'joi'
 
-const commsEventValidation = Joi.object({
+const schema = Joi.object({
   id: Joi.string().guid({ version: ['uuidv4'] }).required().messages({
     'string.base': 'id should be a type of string',
     'string.guid': 'id should be a valid UUID',
@@ -12,4 +12,4 @@ const commsEventValidation = Joi.object({
   })
 })
 
-export default commsEventValidation
+export default schema

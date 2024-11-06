@@ -1,8 +1,9 @@
-import commsEventValidation from './schemas/schema.js'
+import schema from './schemas/comms-message.js'
+import db from '../data/index.js'
 
-const processCommsMessage = async (message, receiver, commsEventModel) => {
+const processCommsMessage = async (message, receiver) => {
   try {
-    const { error, value: validData } = commsEventValidation.validate(message.body)
+    const { error, value: validData } = schema.validate(message.body)
 
     if (error) {
       console.error('Validation error:', error.details)
@@ -15,7 +16,7 @@ const processCommsMessage = async (message, receiver, commsEventModel) => {
       dateCreated: new Date()
     }
 
-    await commsEventModel.create(commsMessageWithTimeStamp)
+    await db.commsEvent.create(commsMessageWithTimeStamp)
     await receiver.completeMessage(message)
     console.log('Message processed successfully:', commsMessageWithTimeStamp)
   } catch (err) {

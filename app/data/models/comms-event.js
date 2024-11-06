@@ -1,7 +1,5 @@
-import { DataTypes } from 'sequelize'
-
-const commsEventModel = (sequelize) => {
-  const commsEvent = sequelize.define('commsEvent', {
+export default (sequelize, DataTypes) => {
+  return sequelize.define('commsEvent', {
     id: {
       type: DataTypes.STRING(36),
       primaryKey: true,
@@ -21,8 +19,4 @@ const commsEventModel = (sequelize) => {
     freezeTableName: true,
     timestamps: false
   })
-
-  return commsEvent
 }
-
-export default commsEventModel
