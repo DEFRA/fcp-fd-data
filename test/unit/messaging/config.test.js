@@ -10,12 +10,10 @@ describe('messaging config', () => {
   let originalEnv
 
   beforeEach(() => {
-    // Save the original environment variables
     originalEnv = { ...process.env }
   })
 
   afterEach(() => {
-    // Restore the original environment variables
     process.env = originalEnv
     jest.resetModules()
   })
