@@ -36,7 +36,7 @@ components:
           $ref: '#/components/schemas/id'
         commsMessage:
           $ref: '#/components/schemas/commsMessage'
-
+      additionalProperties: false
 
     commsMessage:
       type: object
