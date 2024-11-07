@@ -3,6 +3,7 @@ import db from '../data/index.js'
 
 const processCommsMessage = async (message, receiver) => {
   try {
+    console.log('Processing message:', message.body)
     const { error, value: validData } = schema.validate(message.body)
 
     if (error) {
@@ -11,14 +12,9 @@ const processCommsMessage = async (message, receiver) => {
       return
     }
 
-    const commsMessageWithTimeStamp = {
-      ...validData,
-      dateCreated: new Date()
-    }
-
-    await db.commsEvent.create(commsMessageWithTimeStamp)
+    await db.commsEvent.create(validData)
     await receiver.completeMessage(message)
-    console.log('Message processed successfully:', commsMessageWithTimeStamp)
+    console.log('Message processed successfully:', validData)
   } catch (err) {
     console.error('Unable to process request:', err)
     await receiver.abandonMessage(message)
