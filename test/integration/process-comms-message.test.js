@@ -9,10 +9,7 @@ jest.mock('@azure/service-bus', () => {
     ServiceBusClient: jest.fn().mockImplementation(() => {
       return {
         createReceiver: jest.fn().mockReturnValue({
-          subscribe: jest.fn((handlers) => {
-            const message = VALID_MESSAGE
-            handlers.processMessage(message)
-          }),
+          subscribe: jest.fn(),
           abandonMessage: jest.fn(),
           completeMessage: jest.fn(),
           close: jest.fn()
@@ -29,6 +26,7 @@ describe('processCommsMessage', () => {
   beforeEach(async () => {
     serviceBusClientInstance = new (await import('@azure/service-bus')).ServiceBusClient()
     receiver = serviceBusClientInstance.createReceiver()
+    await db.sequelize.truncate({ cascade: true })
   })
 
   afterEach(async () => {
