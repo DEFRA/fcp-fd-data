@@ -9,10 +9,8 @@ jest.mock('@azure/service-bus', () => {
     ServiceBusClient: jest.fn().mockImplementation(() => {
       return {
         createReceiver: jest.fn().mockReturnValue({
-          subscribe: jest.fn(),
           abandonMessage: jest.fn(),
-          completeMessage: jest.fn(),
-          close: jest.fn()
+          completeMessage: jest.fn()
         })
       }
     })
@@ -47,13 +45,12 @@ describe('processCommsMessage', () => {
 
   test('should not process an invalid message', async () => {
     await processCommsMessage(INVALID_MESSAGE, receiver)
-
     const savedMessage = await db.commsEvent.findByPk(INVALID_MESSAGE.body.id)
     expect(savedMessage).toBeNull()
     expect(receiver.abandonMessage).toHaveBeenCalledWith(INVALID_MESSAGE)
   })
 
-  test('should handle processing errors', async () => {
+  test('should throw abandon message when internal error occurs ', async () => {
     jest.spyOn(db.commsEvent, 'create').mockImplementation(() => {
       throw new Error('Database error')
     })
