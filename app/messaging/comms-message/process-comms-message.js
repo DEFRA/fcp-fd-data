@@ -1,9 +1,8 @@
-import schema from './schemas/comms-message.js'
-import db from '../data/index.js'
+import schema from './schema.js'
+import db from '../../data/index.js'
 
 const processCommsMessage = async (message, receiver) => {
   try {
-    console.log('Processing message:', message.body)
     const { error, value: validData } = schema.validate(message.body)
 
     if (error) {

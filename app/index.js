@@ -1,7 +1,7 @@
 import { setup } from './insights.js'
 import 'log-timestamp'
 import { createServer } from './server.js'
-import messaging from './messaging/index.js'
+import messaging from './messaging/comms-message/index.js'
 
 const init = async () => {
   const server = await createServer()

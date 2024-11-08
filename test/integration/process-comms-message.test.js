@@ -1,4 +1,4 @@
-import processCommsMessage from '../../app/messaging/process-comms-message'
+import processCommsMessage from '../../app/messaging/comms-message/process-comms-message'
 import db from '../../app/data/index'
 import { jest } from '@jest/globals'
 import VALID_MESSAGE from '../mocks/valid-comms-message'

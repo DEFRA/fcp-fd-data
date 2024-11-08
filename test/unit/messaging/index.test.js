@@ -1,5 +1,5 @@
 import { MessageReceiver } from 'ffc-messaging'
-import commsService from '../../../app/messaging/index.js'
+import commsService from '../../../app/messaging/comms-message/index.js'
 import { jest } from '@jest/globals'
 
 describe('commsService', () => {
@@ -25,7 +25,7 @@ describe('commsService', () => {
     await commsService.start()
 
     expect(MessageReceiver.prototype.subscribe).toHaveBeenCalled()
-    expect(consoleInfoSpy).toHaveBeenCalledWith('Ready to receive customer requests')
+    expect(consoleInfoSpy).toHaveBeenCalledWith('Service is ready to consume messages')
 
     consoleInfoSpy.mockRestore()
   })
