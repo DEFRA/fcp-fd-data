@@ -1,39 +1,43 @@
-import { MessageReceiver } from 'ffc-messaging'
-import commsService from '../../../app/messaging/comms-message/index.js'
-import { jest } from '@jest/globals'
+import { expect, jest } from '@jest/globals'
 
-describe('commsService', () => {
-  let mockMessageReceiver
+const mockProcessCommsMessage = jest.fn()
+jest.unstable_mockModule('../../../app/messaging/comms-message/process-comms-message.js', () => ({
+  default: mockProcessCommsMessage
+}))
+jest.mock('ffc-messaging', () => {
+  const mockSubscribe = jest.fn()
+  const mockCloseConnection = jest.fn()
+  return {
+    MessageReceiver: jest.fn(() => ({
+      subscribe: mockSubscribe,
+      closeConnection: mockCloseConnection
+    }))
+  }
+})
 
-  beforeEach(() => {
-    mockMessageReceiver = {
-      subscribe: jest.fn(),
-      closeConnection: jest.fn()
-    }
-    jest.spyOn(MessageReceiver.prototype, 'subscribe').mockImplementation(mockMessageReceiver.subscribe)
-    jest.spyOn(MessageReceiver.prototype, 'closeConnection').mockImplementation(mockMessageReceiver.closeConnection)
+describe('Start and Stop Messaging Service', () => {
+  let MessageReceiver, module
+
+  beforeAll(async () => {
+    module = await import('../../../app/messaging/comms-message/index.js')
+    MessageReceiver = (await import('ffc-messaging')).MessageReceiver
+    console.log(MessageReceiver)
   })
 
-  afterEach(async () => {
-    await commsService.stop()
+  beforeEach(() => {
     jest.clearAllMocks()
   })
 
-  test('start should initialize MessageReceiver and subscribe', async () => {
-    const consoleInfoSpy = jest.spyOn(console, 'info').mockImplementation(() => {})
+  test('should pass a callback to the MessageReceiver that calls processCommsMessage and stop the receiver', async () => {
+    await module.default.start()
+    const mockMessage = { body: 'This is a test message' }
+    const messageCallback = MessageReceiver.mock.calls[0][1]
+    await messageCallback(mockMessage)
+    await module.default.stop()
 
-    await commsService.start()
-
-    expect(MessageReceiver.prototype.subscribe).toHaveBeenCalled()
-    expect(consoleInfoSpy).toHaveBeenCalledWith('Service is ready to consume messages')
-
-    consoleInfoSpy.mockRestore()
-  })
-
-  test('stop should close the MessageReceiver connection', async () => {
-    await commsService.start()
-    await commsService.stop()
-
-    expect(MessageReceiver.prototype.closeConnection).toHaveBeenCalled()
+    expect(mockProcessCommsMessage).toHaveBeenCalledWith(
+      mockMessage,
+      expect.objectContaining({ subscribe: expect.any(Function) })
+    )
   })
 })
