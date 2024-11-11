@@ -3,8 +3,10 @@ import HapiPino from 'hapi-pino'
 import Joi from 'joi'
 import healthy from './routes/healthy.js'
 import healthz from './routes/healthz.js'
+import hapiApollo from '@as-integrations/hapi'
+import apolloServer from './graphql/apollo-server.js'
 
-const createServer = () => {
+const createServer = async () => {
   const server = Hapi.server({
     port: process.env.PORT
   })
@@ -21,6 +23,13 @@ const createServer = () => {
     options: {
       logPayload: true,
       level: 'warn'
+    }
+  })
+  await server.register({
+    plugin: hapiApollo.default,
+    options: {
+      apolloServer,
+      path: '/graphql'
     }
   })
 

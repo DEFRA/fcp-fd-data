@@ -2,8 +2,10 @@ import { setup } from './insights.js'
 import 'log-timestamp'
 import { createServer } from './server.js'
 import messaging from './messaging/comms-message/index.js'
+import apolloServer from './graphql/apollo-server.js'
 
 const init = async () => {
+  await apolloServer.start()
   const server = await createServer()
   await server.start()
   await messaging.start()
