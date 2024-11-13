@@ -1,5 +1,6 @@
 const commsMessageTypeDefs = `#graphql
 scalar JSON
+scalar Timestamp
 
 type Query {
     commsEvents: [CommsEvent]
@@ -9,7 +10,7 @@ type Query {
 
   type CommsEvent {
     id: String
-    dateCreated: String
+    dateCreated: Timestamp
     commsMessage: JSON
   }
 `
