@@ -3,17 +3,38 @@ import { GraphQLScalarType, Kind } from 'graphql'
 const GraphQLJSON = new GraphQLScalarType({
   name: 'JSON',
   description: 'Custom scalar type for JSON data',
+
   parseValue (value) {
-    return JSON.parse(value) // value from the client input variables
+    return typeof value === 'string' ? JSON.parse(value) : value
   },
+
   serialize (value) {
-    return JSON.stringify(value) // value sent to the client
+    return value
   },
+
   parseLiteral (ast) {
-    if (ast.kind === Kind.STRING) {
-      return JSON.parse(ast.value) // value from the client query
+    switch (ast.kind) {
+      case Kind.STRING:
+        return JSON.parse(ast.value)
+      case Kind.INT:
+        return parseInt(ast.value, 10)
+      case Kind.FLOAT:
+        return parseFloat(ast.value)
+      case Kind.BOOLEAN:
+        return ast.value === 'true'
+      case Kind.OBJECT: {
+        const value = Object.create(null)
+        ast.fields.forEach(field => {
+          value[field.name.value] = this.parseLiteral(field.value)
+        })
+        return value
+      }
+      case Kind.LIST: {
+        return ast.values.map(valueNode => this.parseLiteral(valueNode))
+      }
+      default:
+        return null
     }
-    return null
   }
 })
 

@@ -1,5 +1,4 @@
-import { Kind } from 'graphql/language/index.js'
-import { GraphQLScalarType } from 'graphql'
+import { GraphQLScalarType, Kind } from 'graphql'
 
 const TimestampType = new GraphQLScalarType({
   name: 'Timestamp',
