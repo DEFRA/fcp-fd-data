@@ -1,14 +1,8 @@
 import { ApolloServer } from '@apollo/server'
-// type defs and resolvers here
+import resolvers from './resolvers/index.js'
+import typeDefs from './schema/index.js'
+
 export default new ApolloServer({
-  typeDefs: `
-    type Query {
-      hello: String
-    }
-  `,
-  resolvers: {
-    Query: {
-      hello: () => 'Hello sfd devs!'
-    }
-  }
+  typeDefs,
+  resolvers
 })

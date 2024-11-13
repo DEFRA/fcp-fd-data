@@ -19,10 +19,4 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="Defra" id="5">
-        <modifyDataType tableName="commsEvent" columnName="dateCreated" newDataType="TIMESTAMPTZ" />
-    </changeSet>
-    <changeSet author="Defra" id="6">
-        <addDefaultValue tableName="commsEvent" columnName="dateCreated" defaultValueComputed="CURRENT_TIMESTAMP" />
-    </changeSet>
 </databaseChangeLog>
