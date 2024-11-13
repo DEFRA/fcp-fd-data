@@ -5,7 +5,7 @@ const GraphQLJSON = new GraphQLScalarType({
   description: 'Custom scalar type for JSON data',
 
   parseValue (value) {
-    return typeof value === 'string' ? JSON.parse(value) : value
+    return JSON.parse(value)
   },
 
   serialize (value) {
