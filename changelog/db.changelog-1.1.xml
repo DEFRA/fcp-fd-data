@@ -8,10 +8,10 @@
     </changeSet>
     <changeSet author="Defra" id="4">
         <createTable tableName="commsEvent">
-            <column name="id" type="VARCHAR(36)">
+            <column name="id" type="UUID">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="commsEvent_pkey" />
             </column>
-            <column name="dateCreated" type="TIMESTAMP">
+            <column name="dateCreated" type="TIMESTAMPTZ">
                 <constraints nullable="false" />
             </column>
             <column name="commsMessage" type="JSONB">
@@ -20,9 +20,6 @@
         </createTable>
     </changeSet>
     <changeSet author="Defra" id="5">
-        <modifyDataType tableName="commsEvent" columnName="dateCreated" newDataType="TIMESTAMPTZ" />
-    </changeSet>
-    <changeSet author="Defra" id="6">
         <addDefaultValue tableName="commsEvent" columnName="dateCreated" defaultValueComputed="CURRENT_TIMESTAMP" />
     </changeSet>
 </databaseChangeLog>
