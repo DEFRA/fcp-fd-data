@@ -1,17 +1,63 @@
 const commsMessageTypeDefs = `#graphql
 scalar JSON
 scalar Timestamp
+scalar JSONObject
 
 type Query {
     commsEvents: [CommsEvent]
-    commsEventsBySbi(sbi: Int!): [CommsEvent]
     commsEventById(id: String!): CommsEvent
+    commsByProperty(key: commsEnum!, value: String!): [CommsEvent]
   }
 
   type CommsEvent {
     id: String
     dateCreated: Timestamp
-    commsMessage: JSON
+    commsMessage: commsMessageDetails
+  }
+
+  type commsMessageDetails{
+  id: String
+  data: commsData
+  time: Timestamp
+  type: String
+  source: String
+  specversion: String
+  datacontenttype: String
+  }
+
+  type commsData{
+  crn: Int
+  sbi: Int
+  commsType: String
+  reference: String
+  commsAddress: String
+  sourceSystem: String
+  emailReplyToId: String
+  statusDetails: JSONObject
+  coorelationId: String
+  personalisation: JSONObject
+  }
+
+  enum commsEnum{
+    CRN
+    SBI
+    COMMS_TYPE
+    REFERENCE
+    COMMS_ADDRESS
+    SOURCE_SYSTEM
+    EMAIL_REPLY_TO_ID
+    STATUS_DETAILS
+    COORELATION_ID
+    PERSONALISATION
+    DATA
+    TIME
+    TYPE
+    SOURCE
+    SPECVERSION
+    DATACONTENTTYPE
+    DATE_CREATED
+    COMMS_MESSAGE
+    ID
   }
 `
 export default commsMessageTypeDefs
