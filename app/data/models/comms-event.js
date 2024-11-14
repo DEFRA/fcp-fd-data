@@ -1,8 +1,7 @@
-const number36 = 36
 export default (sequelize, DataTypes) => {
   return sequelize.define('commsEvent', {
     id: {
-      type: DataTypes.STRING(number36),
+      type: DataTypes.STRING(36),
       primaryKey: true,
       allowNull: false
     },
