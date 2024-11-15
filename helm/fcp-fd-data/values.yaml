@@ -20,16 +20,18 @@ containerSecret:
 
 deployment: {}
 
+port: &port 3033
+
 container:
-  requestMemory: 100Mi
-  requestCpu: 100m
-  limitMemory: 100Mi
-  limitCpu: 100m
-  port: 3033
+  resourceTier: M
+  port: *port
+  messageQueueHost: namespace.servicebus.windows.net
+  commsSubscriptionAddress: fcp-fd-data
+  commsTopicAddress: fcp-fd-data
 
 livenessProbe:
   path: /healthz
-  port: 3033
+  port: *port
   initialDelaySeconds: 20
   periodSeconds: 10
   failureThreshold: 3
@@ -37,7 +39,7 @@ livenessProbe:
 
 readinessProbe:
   path: /healthy
-  port: 3033
+  port: *port
   initialDelaySeconds: 30
   periodSeconds: 10
   failureThreshold: 3
@@ -46,7 +48,7 @@ readinessProbe:
 postgresService:
   postgresDb: fcp_fd_data
   postgresExternalName:
-  postgresHost: fcp-fd-data-postgres
+  postgresqlHost: fcp-fd-data-postgres
   postgresPort: 5432
   postgresSchema: public
   postgresUser: postgres

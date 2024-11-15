@@ -1,6 +1,6 @@
 {
   "name": "fcp-fd-data",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Data integration layer for the Single Front Door",
   "homepage": "https://github.com/DEFRA/fcp-fd-data",
   "main": "app/index.js",
@@ -18,21 +18,24 @@
   "contributors": [
     "Abidemi Adio <abidemi.adio@defra.gov.uk>",
     "Simon Dunn <simon.dunn1@defra.gov.uk>",
-    "Rana Salem <rana.salem@defra.gov.uk>"
+    "Rana Salem <rana.salem@defra.gov.uk>",
+    "Amirs Ismuhametovs <amirs.ishmuhametovs@defra.gov.uk>"
   ],
   "license": "OGL-UK-3.0",
   "dependencies": {
     "@azure/identity": "4.4.1",
     "@hapi/hapi": "21.3.2",
     "applicationinsights": "2.9.1",
+    "convict": "^6.2.4",
+    "ffc-messaging": "2.10.1",
     "hapi-pino": "12.1.0",
     "joi": "17.13.3",
     "log-timestamp": "0.3.0",
     "pg": "8.13.0",
-    "sequelize": "6.37.4"
+    "sequelize": "^6.37.5"
   },
   "devDependencies": {
-    "jest": "29.7.0",
+    "jest": "^29.7.0",
     "jest-junit": "16.0.0",
     "nodemon": "3.0.1",
     "standard": "17.1.0"

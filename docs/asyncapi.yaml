@@ -1,0 +1,54 @@
+asyncapi: 3.0.0
+info:
+  title: Single Front Door Data Service
+  version: 1.0.0
+  description: Data layer for the Single Front Door service
+
+channels:
+  fcp-fd-data:
+    address: fcp-fd-data
+    description: |
+      Accepts events for message notifications.
+    messages:
+      commsEvent:
+        $ref: '#/components/messages/commsEvent'
+
+operations:
+  fcp-fd-data.subscribe:
+    action: receive
+    channel:
+      $ref: '#/channels/fcp-fd-data'
+components:
+  messages:
+    commsEvent:
+      name: event data for user communications
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/commsEventSchema'
+  schemas:
+    commsEventSchema:
+      type: object
+      required:
+        - id
+        - commsMessage
+      properties:
+        id:
+          $ref: '#/components/schemas/id'
+        commsMessage:
+          $ref: '#/components/schemas/commsMessage'
+      additionalProperties: false
+
+    commsMessage:
+      type: object
+      description: event relating to a specific user communications message in Cloud Events format
+      example:
+        event: event-goes-here
+    id:
+      type: string
+      format: uuid
+      description: The unique ID of the event
+      example: 123e4567-e89b-12d3-a456-426655440000
+      minlength: 1
+      uniqueItems: true
+
+      
