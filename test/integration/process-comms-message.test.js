@@ -2,7 +2,7 @@ import processCommsMessage from '../../app/messaging/comms-message/process-comms
 import db from '../../app/data/index'
 import { jest } from '@jest/globals'
 import VALID_MESSAGE from '../mocks/valid-comms-message'
-import INVALID_MESSAGE from '../mocks/invalid-comms-message'
+import schema from '../../app/messaging/comms-message/schema'
 
 jest.mock('@azure/service-bus', () => {
   return {
