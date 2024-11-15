@@ -12,6 +12,7 @@ const processCommsMessage = async (message, receiver) => {
     }
 
     validData.dateCreated = new Date().toISOString()
+
     await db.commsEvent.create(validData)
     await receiver.completeMessage(message)
     console.log('Message processed successfully:', validData)

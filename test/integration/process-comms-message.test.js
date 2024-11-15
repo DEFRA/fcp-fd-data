@@ -25,6 +25,7 @@ describe('processCommsMessage', () => {
     serviceBusClientInstance = new (await import('@azure/service-bus')).ServiceBusClient()
     receiver = serviceBusClientInstance.createReceiver()
     await db.sequelize.truncate({ cascade: true })
+    jest.spyOn(console, 'error').mockImplementation(() => {})
   })
 
   afterEach(async () => {
@@ -42,19 +43,26 @@ describe('processCommsMessage', () => {
     expect(savedMessage.dataValues.commsMessage.message).toBe('Hello, World!')
     expect(receiver.completeMessage).toHaveBeenCalledWith(VALID_MESSAGE)
   })
-
-  test('should not process an invalid message', async () => {
-    await processCommsMessage(INVALID_MESSAGE, receiver)
-    const savedMessage = await db.commsEvent.findByPk(INVALID_MESSAGE.body.id)
-    expect(savedMessage).toBeNull()
-    expect(receiver.abandonMessage).toHaveBeenCalledWith(INVALID_MESSAGE)
-  })
-
-  test('should throw abandon message when internal error occurs ', async () => {
+  test('should abandon message when internal error occurs', async () => {
+    const internalError = new Error('Database error')
     jest.spyOn(db.commsEvent, 'create').mockImplementation(() => {
-      throw new Error('Database error')
+      throw internalError
     })
     await processCommsMessage(VALID_MESSAGE, receiver)
+    expect(console.error).toHaveBeenCalledWith('Unable to process request:', internalError)
+    expect(receiver.abandonMessage).toHaveBeenCalledWith(VALID_MESSAGE)
+  })
+
+  test('should abandon message when validation error occurs', async () => {
+    const validationError = new Error('Validation error')
+    validationError.details = 'Invalid message format'
+    jest.spyOn(schema, 'validate').mockImplementation(() => {
+      return { error: validationError }
+    })
+
+    await processCommsMessage(VALID_MESSAGE, receiver)
+
+    expect(console.error).toHaveBeenCalledWith('Validation error:', validationError.details)
     expect(receiver.abandonMessage).toHaveBeenCalledWith(VALID_MESSAGE)
   })
 })
