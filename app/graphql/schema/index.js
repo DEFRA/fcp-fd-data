@@ -1,4 +1,4 @@
-import commsMessageTypeDefs from './comms-message/type-defenitions.js'
+import commsMessageTypeDefs from './comms-message/type-definitions.js'
 
 const typeDefs = [
   commsMessageTypeDefs

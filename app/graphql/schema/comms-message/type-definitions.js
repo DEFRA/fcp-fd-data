@@ -39,6 +39,14 @@ type Query {
   }
 
   enum commsEnum{
+    ID
+    TIME
+    TYPE
+    SOURCE
+    SPECVERSION
+    DATACONTENTTYPE
+    DATE_CREATED
+    COMMS_MESSAGE
     CRN
     SBI
     COMMS_TYPE
@@ -49,15 +57,6 @@ type Query {
     STATUS_DETAILS
     COORELATION_ID
     PERSONALISATION
-    DATA
-    TIME
-    TYPE
-    SOURCE
-    SPECVERSION
-    DATACONTENTTYPE
-    DATE_CREATED
-    COMMS_MESSAGE
-    ID
   }
 `
 export default commsMessageTypeDefs
