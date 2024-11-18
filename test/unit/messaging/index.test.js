@@ -21,7 +21,6 @@ describe('Start and Stop Messaging Service', () => {
   beforeAll(async () => {
     module = await import('../../../app/messaging/comms-message/index.js')
     MessageReceiver = (await import('ffc-messaging')).MessageReceiver
-    console.log(MessageReceiver)
   })
 
   beforeEach(() => {

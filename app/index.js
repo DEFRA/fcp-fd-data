@@ -15,7 +15,6 @@ const init = async () => {
       path: '/graphql'
     }
   })
-  console.log(server)
   await server.start()
   await messaging.start()
   console.log('Server running on %s', server.info.uri)
