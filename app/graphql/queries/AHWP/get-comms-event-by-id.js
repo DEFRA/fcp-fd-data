@@ -5,34 +5,29 @@ const commsEvent = async (_, { id }) => {
   const event = await db.commsEvent.findByPk(id)
   console.log('eventId', event.id)
   console.log('event.commsMessage', event.commsMessage)
-  if (!event) {
-    return null
-  }
-
-  const commsMessage = typeof event.commsMessage === 'string' ? JSON.parse(event.commsMessage) : event.commsMessage
 
   return {
     id: event.id,
     dateCreated: event.dateCreated,
     commsMessage: {
-      id: commsMessage.id,
+      id: event.commsMessage.id,
       data: {
-        crn: commsMessage.data.crn,
-        sbi: commsMessage.data.sbi,
-        commsType: commsMessage.data.commsType,
-        reference: commsMessage.data.reference,
-        commsAddress: commsMessage.data.commsAddress,
-        sourceSystem: commsMessage.data.sourceSystem,
-        emailReplyToId: commsMessage.data.emailReplyToId,
-        statusDetails: commsMessage.data.statusDetails,
-        coorelationId: commsMessage.data.coorelationId,
-        personalisation: commsMessage.data.personalisation
+        crn: event.commsMessage.data.crn,
+        sbi: event.commsMessage.data.sbi,
+        commsType: event.commsMessage.data.commsType,
+        reference: event.commsMessage.data.reference,
+        commsAddress: event.commsMessage.data.commsAddress,
+        sourceSystem: event.commsMessage.data.sourceSystem,
+        emailReplyToId: event.commsMessage.data.emailReplyToId,
+        statusDetails: event.commsMessage.data.statusDetails,
+        coorelationId: event.commsMessage.data.coorelationId,
+        personalisation: event.commsMessage.data.personalisation
       },
-      time: commsMessage.time,
-      type: commsMessage.type,
-      source: commsMessage.source,
-      specversion: commsMessage.specversion,
-      datacontenttype: commsMessage.datacontenttype
+      time: event.commsMessage.time,
+      type: event.commsMessage.type,
+      source: event.commsMessage.source,
+      specversion: event.commsMessage.specversion,
+      datacontenttype: event.commsMessage.datacontenttype
     }
   }
 }
