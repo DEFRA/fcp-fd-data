@@ -44,9 +44,6 @@ describe('e2e dem', () => {
 
   beforeAll(async () => {
     await db.commsEvent.create(validCommsMessage)
-  })
-
-  beforeEach(async () => {
     await apolloServer.start()
     server = await createServer()
     await server.initialize()
@@ -57,6 +54,9 @@ describe('e2e dem', () => {
         path: '/graphql'
       }
     })
+  })
+
+  beforeEach(async () => {
   })
 
   // after the tests we'll stop the server
@@ -83,6 +83,30 @@ describe('e2e dem', () => {
     expect(responseBody.errors).toBeUndefined()
     expect(responseBody.data.commsByProperty).toBeDefined()
     expect(responseBody.data.commsByProperty[0].commsMessage.data.crn).toBe(1234567890)
+    expect(responseBody.data.commsByProperty[0].commsMessage.data.commsAddress).toBe('test-commsAddress')
+  })
+
+  test('fetches specified comms event', async () => {
+    // send our request to the url of the test server
+    const options = {
+      method: 'POST',
+      url: '/graphql',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      payload: JSON.stringify(queryData)
+    }
+    validCommsMessage.commsMessage.data.crn = '223456789'
+    validCommsMessage.id = '123e4567-e89b-12d3-a456-426655440055'
+    await db.commsEvent.create(validCommsMessage)
+    const response = await server.inject(options)
+
+    const responseBody = JSON.parse(response.result)
+    console.log('responseBody', responseBody.data.commsByProperty[0].id)
+    expect(responseBody.errors).toBeUndefined()
+    expect(responseBody.data.commsByProperty.length).toBe(1)
+    expect(responseBody.data.commsByProperty).toBeDefined()
+    expect(responseBody.data.commsByProperty[0].commsMessage.data.crn).toBe(8955555666)
     expect(responseBody.data.commsByProperty[0].commsMessage.data.commsAddress).toBe('test-commsAddress')
   })
 })
