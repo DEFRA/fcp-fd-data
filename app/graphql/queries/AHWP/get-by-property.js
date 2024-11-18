@@ -1,30 +1,24 @@
+import { Op } from 'sequelize'
 import db from '../../../data/index.js'
 import commsEnumMap from '../../schema/comms-message/comms-enum-map.js'
 
 const commsByProperty = async (_, { key, value }) => {
   const mappedKey = commsEnumMap[key]
-
-  if (!isNaN(value)) {
-    value = parseInt(value)
-  }
-  const query = db.sequelize.query(
-    `
-    SELECT "id", "dateCreated", "commsMessage" 
-    FROM "public"."commsEvent" AS "commsEvent"
-    WHERE CAST(("commsMessage"#>>'{${mappedKey}}') AS TEXT) = '${value}';
-    `,
-    {
-      replacements: { value },
-      type: db.Sequelize.QueryTypes.SELECT
-    }
-  )
+  value = value.toString()
 
   try {
-    const result = await query
+    const result = await db.commsEvent.findAll({
+      where: db.sequelize.where(
+        db.sequelize.cast(db.sequelize.json(`commsMessage.${mappedKey}`), 'TEXT'),
+        {
+          [Op.eq]: value
+        }
+      )
+    })
+
     return result
   } catch (error) {
-    console.error('Error executing query:', error)
-    throw error
+    throw new Error('Error executing query:', error)
   }
 }
 
