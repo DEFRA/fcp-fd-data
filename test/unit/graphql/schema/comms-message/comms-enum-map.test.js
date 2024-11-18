@@ -11,6 +11,8 @@ describe('commsByProperty', () => {
 
   afterAll(async () => {
     await db.commsEvent.destroy({ where: {} })
+    await db.sequelize.truncate({ cascade: true })
+    await db.sequelize.close()
   })
 
   test.each(Object.entries(commsEnumMap))('should map key %s to %s and query the database', async (key, mappedKey) => {

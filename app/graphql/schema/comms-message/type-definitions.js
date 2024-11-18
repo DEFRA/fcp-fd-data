@@ -15,7 +15,7 @@ type Query {
     commsMessage: commsMessageDetails
   }
 
-  type commsMessageDetails{
+  type commsMessageDetails {
   id: String
   data: commsData
   time: Timestamp
@@ -25,7 +25,7 @@ type Query {
   datacontenttype: String
   }
 
-  type commsData{
+  type commsData {
   crn: Int
   sbi: Int
   commsType: String
@@ -38,7 +38,7 @@ type Query {
   personalisation: JSONObject
   }
 
-  enum commsEnum{
+  enum commsEnum {
     ID
     TIME
     TYPE

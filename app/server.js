@@ -16,7 +16,7 @@ const createServer = async () => {
 
   server.validator(Joi)
   server.route(routes)
-  server.register({
+  await server.register({
     plugin: HapiPino,
     options: {
       logPayload: true,

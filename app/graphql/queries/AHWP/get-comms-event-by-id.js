@@ -1,7 +1,11 @@
 import db from '../../../data/index.js'
 
 const commsEvent = async (_, { id }) => {
+  console.log('id', id)
   const event = await db.commsEvent.findByPk(id)
+  console.log('eventId', event.id)
+  console.log('event.commsMessage', event.commsMessage)
+  console.log('event.commsMessage.id', JSON.parse(event.commsMessage).id)
   if (!event) {
     return null
   }
