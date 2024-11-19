@@ -1,29 +1,24 @@
-import db from '../../../app/data/index.js' // Adjust the path as necessary
+import db from '../../../app/data/index.js'
 import validCommsMessage from '../../mocks/valid-comms-message-json-object.js'
 import commsByIdQuery from './queries/comms-by-id.js'
 import registerApollo from '../../../app/server/start.js'
-
-// TODO create mock data for the query
-// TODO create wrapper function for setting up hapi and GQL server
+import createTestCases from '../../helper-functions/create-database-entries.js'
 
 describe('GQL get by ID', () => {
   let server
 
   beforeAll(async () => {
-    await db.commsEvent.create(validCommsMessage)
+    await createTestCases(validCommsMessage, db.commsEvent, { id: '123e4567-e89b-12d3-a456-426655440000' }, 1)
     server = await registerApollo()
     await server.start()
   })
 
-  // after the tests we'll stop the server
   afterAll(async () => {
     await db.sequelize.truncate({ cascade: true })
     await db.sequelize.close()
   })
 
-  // describe block called GraphQL query tests for commsEvent queries use test not it
   test('fetches commsEvent by id', async () => {
-    // send our request to the url of the test server
     const options = {
       method: 'POST',
       url: '/graphql',

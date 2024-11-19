@@ -1,19 +1,15 @@
-import db from '../../../app/data/index.js' // Adjust the path as necessary
+import db from '../../../app/data/index.js'
 import validCommsMessage from '../../mocks/valid-comms-message-json-object.js'
 import commsByPropertyQuery from './queries/comms-by-property.js'
 import registerApollo from '../../../app/server/start.js'
-
-// TODO create mock data for the query
-// TODO create wrapper function for setting up hapi and GQL server
-// TODO create helper function for inserting records into the database
+import createTestCases from '../../helper-functions/create-database-entries.js'
 
 describe('GQL queries', () => {
   let server
 
   beforeAll(async () => {
-    await db.commsEvent.create(validCommsMessage)
-    validCommsMessage.id = '123e4567-e89b-12d3-a456-426655440051'
-    await db.commsEvent.create(validCommsMessage)
+    await createTestCases(validCommsMessage, db.commsEvent, { 'commsMessage.data.crn': 1234567890 }, 2)
+    await createTestCases(validCommsMessage, db.commsEvent, { 'commsMessage.data.crn': 223456789 }, 1)
     server = await registerApollo()
     await server.start()
   })
@@ -44,15 +40,12 @@ describe('GQL queries', () => {
     const responseBody = JSON.parse(response.result)
     expect(responseBody.errors).toBeUndefined()
     expect(responseBody.data.commsByProperty).toBeDefined()
+    console.log('responseBody', responseBody.data.commsByProperty)
     expect(responseBody.data.commsByProperty.length).toBe(2)
     expect(responseBody.data.commsByProperty[0].commsMessage.data.crn).toBe(1234567890)
   })
 
   test('returns a single commsEvent by CRN when multiple records in database', async () => {
-    validCommsMessage.id = '123e4567-e89b-12d3-a456-426655440055'
-    validCommsMessage.commsMessage.data.crn = '223456789'
-    await db.commsEvent.create(validCommsMessage)
-
     const options = {
       method: 'POST',
       url: '/graphql',
