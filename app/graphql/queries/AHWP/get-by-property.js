@@ -18,7 +18,7 @@ const commsByProperty = async (_, { key, value }) => {
 
     return result
   } catch (error) {
-    throw new Error('Error executing query:', error)
+    throw new Error(`Error executing query: ${error.message}`)
   }
 }
 
