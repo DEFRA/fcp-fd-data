@@ -1,8 +1,8 @@
 import Hapi from '@hapi/hapi'
 import HapiPino from 'hapi-pino'
 import Joi from 'joi'
-import healthy from './routes/healthy.js'
-import healthz from './routes/healthz.js'
+import healthy from '../routes/healthy.js'
+import healthz from '../routes/healthz.js'
 
 const createServer = async () => {
   const server = Hapi.server({

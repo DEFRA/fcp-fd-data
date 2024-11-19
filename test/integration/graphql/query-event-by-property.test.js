@@ -1,9 +1,7 @@
-import { createServer } from '../../../app/server.js'
-import apolloServer from '../../../app/graphql/apollo-server.js'
-import hapiApollo from '@as-integrations/hapi'
 import db from '../../../app/data/index.js' // Adjust the path as necessary
 import validCommsMessage from '../../mocks/valid-comms-message-json-object.js'
 import commsByPropertyQuery from './queries/comms-by-property.js'
+import registerApollo from '../../../app/server/start.js'
 
 // TODO create mock data for the query
 // TODO create wrapper function for setting up hapi and GQL server
@@ -16,16 +14,8 @@ describe('GQL queries', () => {
     await db.commsEvent.create(validCommsMessage)
     validCommsMessage.id = '123e4567-e89b-12d3-a456-426655440051'
     await db.commsEvent.create(validCommsMessage)
-    await apolloServer.start()
-    server = await createServer()
-    await server.initialize()
-    await server.register({
-      plugin: hapiApollo.default,
-      options: {
-        apolloServer,
-        path: '/graphql'
-      }
-    })
+    server = await registerApollo()
+    await server.start()
   })
 
   afterAll(async () => {
