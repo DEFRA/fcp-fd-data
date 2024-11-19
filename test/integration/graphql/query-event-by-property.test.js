@@ -21,6 +21,7 @@ describe('GQL queries', () => {
   afterAll(async () => {
     await db.sequelize.truncate({ cascade: true })
     await db.sequelize.close()
+    await server.stop()
   })
 
   test('returns all commsEvents with corresponding CRN', async () => {
