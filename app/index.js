@@ -1,7 +1,7 @@
 import { setup } from './insights.js'
 import 'log-timestamp'
 import messaging from './messaging/comms-message/index.js'
-import registerApollo from './start.js'
+import registerApollo from '../app/server/start.js'
 
 const init = async () => {
   const server = await registerApollo()
