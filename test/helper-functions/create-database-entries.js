@@ -14,12 +14,14 @@ const createTestCases = async (baseCase, dbTable, customProps = {}, recordCount 
     const record = JSON.parse(JSON.stringify(baseCase))
 
     Object.entries(customProps).forEach(([key, value]) => {
-      const keys = key.split('.')
-      let target = record
-      keys.slice(0, -1).forEach(k => {
-        target = target[k]
-      })
-      target[keys[keys.length - 1]] = value
+      key.split('.').reduce((target, k, i, keys) => {
+        if (i === keys.length - 1) {
+          target[k] = value
+        } else {
+          target[k] = target[k] || {}
+        }
+        return target[k]
+      }, record)
     })
     if (!customProps.id) {
       record.id = uuidv4()
