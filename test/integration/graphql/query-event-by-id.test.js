@@ -36,7 +36,6 @@ describe('GQL get by ID', () => {
     const response = await server.inject(options)
 
     const responseBody = JSON.parse(response.result)
-    console.log('responseBody', responseBody)
     expect(responseBody.errors).toBeUndefined()
     expect(responseBody.data.commsEventById).toBeDefined()
     expect(responseBody.data.commsEventById.commsMessage.data.sbi).toBe(987654321)

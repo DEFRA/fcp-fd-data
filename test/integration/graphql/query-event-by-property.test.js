@@ -40,7 +40,6 @@ describe('GQL queries', () => {
     const responseBody = JSON.parse(response.result)
     expect(responseBody.errors).toBeUndefined()
     expect(responseBody.data.commsByProperty).toBeDefined()
-    console.log('responseBody', responseBody.data.commsByProperty)
     expect(responseBody.data.commsByProperty.length).toBe(2)
     expect(responseBody.data.commsByProperty[0].commsMessage.data.crn).toBe(1234567890)
   })

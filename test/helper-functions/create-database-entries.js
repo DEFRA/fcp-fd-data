@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid'
 
 /**
- * Create test cases with dynamic entries
+ * Create test cases dynamically :
  * @param {Object} baseCase - The base object with default key-value pairs
  * @param {Object} dbTable - The database table where records will be inserted
  * @param {Object} customProps - An object with properties to override in the base case

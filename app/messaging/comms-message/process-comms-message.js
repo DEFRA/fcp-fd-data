@@ -15,7 +15,6 @@ const processCommsMessage = async (message, receiver) => {
 
     await db.commsEvent.create(validData)
     await receiver.completeMessage(message)
-    console.log('Message processed successfully:', validData)
   } catch (err) {
     console.error('Unable to process request:', err)
     await receiver.abandonMessage(message)
