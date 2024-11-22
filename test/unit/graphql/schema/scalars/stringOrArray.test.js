@@ -62,7 +62,7 @@ describe('StringOrArray Scalar', () => {
           { kind: Kind.INT, value: 123 }
         ]
       }
-      expect(() => StringOrArray.parseLiteral(ast)).toThrow('List elements must be strings')
+      expect(() => StringOrArray.parseLiteral(ast)).toThrow('Value must be either a string or an array of strings')
     })
   })
 })
