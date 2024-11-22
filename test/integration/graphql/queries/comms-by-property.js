@@ -1,6 +1,6 @@
 export default {
-  query: `query CommsByProperty($key: commsEnum!, $value: String!) {
-          commsByProperty(key: $key, value: $value) {
+  query: `query CommsEventByProperty($key: commsEnum!, $value: String!) {
+          commsEventByProperty(key: $key, value: $value) {
             id
             dateCreated
             commsMessage {
@@ -10,7 +10,7 @@ export default {
                 sbi
                 commsType
                 reference
-                commsAddress
+                commsAddresses
                 sourceSystem
                 emailReplyToId
                 statusDetails

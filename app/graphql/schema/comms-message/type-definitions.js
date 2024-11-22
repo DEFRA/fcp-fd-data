@@ -7,9 +7,8 @@ scalar StringOrArray # Represents a string or an array of strings
 
 # Availble queries operations
 type Query {
-  commsEvents: [CommsEvent] # GET all comms events
   commsEventByPK(id: String!): CommsEvent # GET a specific comms event by its ID
-  commsByProperty(key: commsEnum!, value: String!): [CommsEvent] # GET comms events filtered by a specific property and value
+  commsEventByProperty(key: commsEnum!, value: String!): [CommsEvent] # GET comms events filtered by a specific property and value
 }
 
 # comms-event received from the upstream comms service

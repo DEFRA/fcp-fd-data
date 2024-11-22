@@ -6,7 +6,7 @@ const validCommsMessage = {
       sbi: 987654321,
       commsType: 'test-commsType',
       reference: 'test-reference',
-      commsAddress: 'test-commsAddress',
+      commsAddresses: 'test-commsAddress',
       sourceSystem: 'test-sourceSystem',
       emailReplyToId: 'test-emailReplyToId',
       statusDetails: { detail: 'test-statusDetails' },

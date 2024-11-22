@@ -7,7 +7,7 @@ const commsEnumMap = {
   SBI: 'data,sbi',
   COMMS_TYPE: 'data,commsType',
   REFERENCE: 'data,reference',
-  COMMS_ADDRESS: 'data,commsAddress',
+  COMMS_ADDRESS: 'data,commsAddresses',
   SOURCE_SYSTEM: 'data,sourceSystem',
   EMAIL_REPLY_TO_ID: 'data,emailReplyToId',
   STATUS_DETAILS: 'data,statusDetails',

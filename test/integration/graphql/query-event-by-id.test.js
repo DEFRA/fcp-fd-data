@@ -1,6 +1,6 @@
 import db from '../../../app/data/index.js'
 import validCommsMessage from '../../mocks/valid-comms-message-json-object.js'
-import commsByIdQuery from './queries/comms-by-id.js'
+import commsEventByPKQuery from './queries/comms-by-id.js'
 import registerApollo from '../../../app/server/start.js'
 import createTestCases from '../../helper-functions/create-database-entries.js'
 
@@ -27,9 +27,9 @@ describe('GQL get by ID', () => {
         'Content-Type': 'application/json'
       },
       payload: JSON.stringify({
-        ...commsByIdQuery,
+        ...commsEventByPKQuery,
         variables: {
-          commsEventByIdId: '123e4567-e89b-12d3-a456-426655440000'
+          commsEventByPKId: '123e4567-e89b-12d3-a456-426655440000'
         }
       })
     }
@@ -37,9 +37,9 @@ describe('GQL get by ID', () => {
 
     const responseBody = JSON.parse(response.result)
     expect(responseBody.errors).toBeUndefined()
-    expect(responseBody.data.commsEventById).toBeDefined()
-    expect(responseBody.data.commsEventById.commsMessage.data.sbi).toBe(987654321)
-    expect(responseBody.data.commsEventById.commsMessage.data.commsAddress).toBe('test-commsAddress')
+    expect(responseBody.data.commsEventByPK).toBeDefined()
+    expect(responseBody.data.commsEventByPK.commsMessage.data.sbi).toBe(987654321)
+    expect(responseBody.data.commsEventByPK.commsMessage.data.commsAddresses).toBe('test-commsAddress')
   })
   test('returns only one record when searching by id', async () => {
     const options = {
@@ -49,9 +49,9 @@ describe('GQL get by ID', () => {
         'Content-Type': 'application/json'
       },
       payload: JSON.stringify({
-        ...commsByIdQuery,
+        ...commsEventByPKQuery,
         variables: {
-          commsEventByIdId: '123e4567-e89b-12d3-a456-426655440000'
+          commsEventByPKId: '123e4567-e89b-12d3-a456-426655440000'
         }
       })
     }
@@ -59,22 +59,22 @@ describe('GQL get by ID', () => {
     const responseBody = JSON.parse(response.result)
 
     expect(responseBody.errors).toBeUndefined()
-    expect(responseBody.data.commsEventById).toBeDefined()
-    expect(Array.isArray(responseBody.data.commsEventById)).toBe(false)
-    expect(responseBody.data.commsEventById.id).toBe('123e4567-e89b-12d3-a456-426655440000')
+    expect(responseBody.data.commsEventByPK).toBeDefined()
+    expect(Array.isArray(responseBody.data.commsEventByPK)).toBe(false)
+    expect(responseBody.data.commsEventByPK.id).toBe('123e4567-e89b-12d3-a456-426655440000')
   })
 
   test('returns null if event is not found', async () => {
     const queryDataNotFound = {
       query: `
-        query CommsEventById($commsEventByIdId: String!) {
-          commsEventById(id: $commsEventByIdId) {
+        query commsEventByPK($commsEventByPKId: String!) {
+          commsEventByPK(id: $commsEventByPKId) {
             id
           }
         }
       `,
       variables: {
-        commsEventByIdId: null
+        commsEventByPKId: null
       }
     }
 
@@ -90,6 +90,6 @@ describe('GQL get by ID', () => {
     const responseBody = JSON.parse(response.result)
 
     expect(responseBody.errors).toBeDefined()
-    expect(responseBody.errors[0].message).toBe('Variable "$commsEventByIdId" of non-null type "String!" must not be null.')
+    expect(responseBody.errors[0].message).toBe('Variable "$commsEventByPKId" of non-null type "String!" must not be null.')
   })
 })

@@ -1,6 +1,6 @@
 export default {
-  query: `query CommsEventById($commsEventByIdId: String!) {
-    commsEventById(id: $commsEventByIdId) {
+  query: `query CommsEventByPK($commsEventByPKId: String!) {
+    commsEventByPK(id: $commsEventByPKId) {
       id
       dateCreated
       commsMessage {
@@ -10,7 +10,7 @@ export default {
           sbi
           commsType
           reference
-          commsAddress
+          commsAddresses
           sourceSystem
           emailReplyToId
           statusDetails
