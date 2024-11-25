@@ -1,5 +1,5 @@
 export default {
-  query: `query CommsEventByProperty($key: commsEnum!, $value: String!) {
+  query: `query CommsEventByProperty($key: commsEnum!, $value: StringOrArray!) {
           commsEventByProperty(key: $key, value: $value) {
             id
             dateCreated
