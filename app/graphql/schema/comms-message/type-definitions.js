@@ -8,7 +8,7 @@ scalar StringOrArray # Represents a string or an array of strings
 # Availble queries operations
 type Query {
   commsEventByPK(id: String!): CommsEvent # GET a specific comms event by its ID
-  commsEventByProperty(key: commsEnum!, value: String!): [CommsEvent] # GET comms events filtered by a specific property and value
+  commsEventByProperty(key: commsEnum!, value: StringOrArray!): [CommsEvent] # GET comms events filtered by a specific property and value
 }
 
 # comms-event received from the upstream comms service
@@ -57,7 +57,7 @@ enum commsEnum {
   SBI # Single Business Identifier
   COMMS_TYPE # Type of the communication (default : email)
   REFERENCE # Reference identifier
-  COMMS_ADDRESS # Communication address
+  COMMS_ADDRESSES # Communication address
   SOURCE_SYSTEM # Source system of the communication
   EMAIL_REPLY_TO_ID # Reply-to identifier for emails
   STATUS_DETAILS # Status details in JSON format
