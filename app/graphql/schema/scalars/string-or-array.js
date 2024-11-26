@@ -2,9 +2,9 @@ import { GraphQLScalarType, Kind } from 'graphql'
 
 function validate (value) {
   if (typeof value === 'string' || (Array.isArray(value) && value.every(item => typeof item === 'string'))) {
-    return { value, error: null } // Return valid value
+    return { value, error: null }
   }
-  return { value: null, error: new Error('Value must be either a string or an array of strings') } // Return error
+  return { value: null, error: new Error('Value must be either a string or an array of strings') }
 }
 
 const StringOrArray = new GraphQLScalarType({
@@ -13,20 +13,20 @@ const StringOrArray = new GraphQLScalarType({
   parseValue (value) {
     const { value: validValue, error } = validate(value)
     if (error) {
-      throw error // Throw the error if validation fails
+      throw error
     }
-    return validValue // Return the valid value
+    return validValue
   },
   serialize (value) {
     const { value: validValue, error } = validate(value)
     if (error) {
-      throw error // Throw the error if validation fails
+      throw error
     }
-    return validValue // Return the valid value
+    return validValue
   },
   parseLiteral (ast) {
     if (ast.kind === Kind.STRING) {
-      return ast.value // Directly return string values
+      return ast.value
     }
     if (ast.kind === Kind.LIST) {
       const values = ast.values.map(value => {
