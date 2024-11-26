@@ -167,7 +167,7 @@ describe('GQL queries', () => {
     expect(responseBody.data.commsEventByProperty[1].commsMessage.data.commsAddresses).toStrictEqual(['commsAddress1', 'commsAddress2'])
   })
 
-  test('returns a correct amount of records when querying commsAddress', async () => {
+  test('returns all commsAddress records for commsAddress where commsAddress type is String and/or Array of Strings', async () => {
     const options = {
       method: 'POST',
       url: '/graphql',
@@ -186,5 +186,8 @@ describe('GQL queries', () => {
     const responseBody = JSON.parse(response.result)
     expect(responseBody.errors).toBeUndefined()
     expect(responseBody.data.commsEventByProperty.length).toBe(3)
+    expect(responseBody.data.commsEventByProperty[0].commsMessage.data.commsAddresses).toStrictEqual(['commsAddress1', 'commsAddress2'])
+    expect(responseBody.data.commsEventByProperty[1].commsMessage.data.commsAddresses).toStrictEqual('commsAddress1')
+    expect(responseBody.data.commsEventByProperty[2].commsMessage.data.commsAddresses).toStrictEqual('commsAddress1')
   })
 })
