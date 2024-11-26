@@ -11,7 +11,7 @@ describe('GQL queries', () => {
     await createTestCases(validCommsMessage, db.commsEvent, { 'commsMessage.data.crn': 1234567890 }, 2)
     await createTestCases(validCommsMessage, db.commsEvent, { 'commsMessage.data.sourceSystem': 'newsourceSystem', 'commsMessage.data.crn': 223456789 }, 1)
     await createTestCases(validCommsMessage, db.commsEvent, { 'commsMessage.data.sourceSystem': 'newsourceSystem', 'commsMessage.data.crn': 223456790, 'commsMessage.data.commsAddresses': ['commsAddress1', 'commsAddress2'] }, 1)
-    await createTestCases(validCommsMessage, db.commsEvent, { 'commsMessage.data.sourceSystem': 'newsourceSystem' }, 2)
+    await createTestCases(validCommsMessage, db.commsEvent, { 'commsMessage.data.sourceSystem': 'newsourceSystem', 'commsMessage.data.commsAddresses': 'commsAddress1' }, 2)
     server = await registerApollo()
     await server.start()
   })
@@ -165,5 +165,26 @@ describe('GQL queries', () => {
     expect(responseBody.data.commsEventByProperty[0].commsMessage.data.commsAddresses).toStrictEqual('test-commsAddress')
     expect(responseBody.data.commsEventByProperty[1].commsMessage.data.crn).toBe(223456790)
     expect(responseBody.data.commsEventByProperty[1].commsMessage.data.commsAddresses).toStrictEqual(['commsAddress1', 'commsAddress2'])
+  })
+
+  test('returns a correct amount of records when querying commsAddress', async () => {
+    const options = {
+      method: 'POST',
+      url: '/graphql',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      payload: JSON.stringify({
+        ...commsEventByPropertyQuery,
+        variables: {
+          key: 'COMMS_ADDRESSES',
+          value: 'commsAddress1'
+        }
+      })
+    }
+    const response = await server.inject(options)
+    const responseBody = JSON.parse(response.result)
+    expect(responseBody.errors).toBeUndefined()
+    expect(responseBody.data.commsEventByProperty.length).toBe(3)
   })
 })
