@@ -4,5 +4,6 @@ import typeDefs from './schema/index.js'
 
 export default new ApolloServer({
   typeDefs,
-  resolvers
+  resolvers,
+  introspection: true
 })
