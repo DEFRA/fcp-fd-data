@@ -6,5 +6,5 @@ import { graphqlConfig } from '../config/index.js'
 export default new ApolloServer({
   typeDefs,
   resolvers,
-  introspection: graphqlConfig.get('environmentCode')
+  introspection: graphqlConfig.get('enableIntrospection')
 })
