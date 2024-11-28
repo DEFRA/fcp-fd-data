@@ -60,7 +60,6 @@ enum commsEnum {
   COMMS_ADDRESSES # Communication address
   SOURCE_SYSTEM # Source system of the communication
   EMAIL_REPLY_TO_ID # Reply-to identifier for emails
-  STATUS_DETAILS # Status details in JSON format
   COORELATION_ID # Correlation ID for tracking
   PERSONALISATION # Personalisation data
 }
