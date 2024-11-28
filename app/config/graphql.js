@@ -1,8 +1,6 @@
 import convict from 'convict'
 import { TEST_ENV, DEV_ENV } from '../constants/enviroments-codes.js'
 
-// const isTestOrDev = process.env.ENVIRONMENT_CODE === 'test' || process.env.ENVIRONMENT_CODE === 'dev'
-
 const graphql = convict({
   enableIntrospection: {
     doc: 'Use of environment code',
