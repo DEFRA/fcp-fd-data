@@ -1,5 +1,5 @@
 import { ApolloServerPluginLandingPageDisabled } from '@apollo/server/plugin/disabled'
 
-const disabledLandingPage = ApolloServerPluginLandingPageDisabled
+const disabledLandingPage = ApolloServerPluginLandingPageDisabled()
 
 export default disabledLandingPage
