@@ -1,5 +1,5 @@
 import { Kind } from 'graphql'
-import StringOrArray from '../../../../../app/graphql/schema/scalars/string-or-array'
+import StringOrArray from '../../../../../app/graphql/resolvers/scalars/string-or-array'
 
 describe('StringOrArray Scalar', () => {
   describe('parseValue', () => {

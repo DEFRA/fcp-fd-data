@@ -1,5 +1,5 @@
 import commsResolvers from './comms-message.js'
-import scalars from '../schema/scalars/index.js'
+import scalars from './scalars/index.js'
 
 const resolvers = {
   Timestamp: scalars.Timestamp,

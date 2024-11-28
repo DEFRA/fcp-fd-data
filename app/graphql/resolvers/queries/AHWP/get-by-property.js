@@ -1,6 +1,6 @@
 import { Op } from 'sequelize'
-import db from '../../../data/index.js'
-import commsEnumMap from '../../schema/comms-message/comms-enum-map.js'
+import db from '../../../../data/index.js'
+import commsEnumMap from '../../../schema/comms-message/comms-enum-map.js'
 import queryCommsEvent from './get-by-property-commsaddress.js'
 
 const commsByProperty = async (_, { key, value }) => {
