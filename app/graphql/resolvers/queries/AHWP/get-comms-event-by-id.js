@@ -1,4 +1,4 @@
-import db from '../../../data/index.js'
+import db from '../../../../data/index.js'
 
 const commsEventbyPK = async (_, { id }) => {
   const event = await db.commsEvent.findByPk(id)
