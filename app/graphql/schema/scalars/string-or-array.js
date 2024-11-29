@@ -11,10 +11,12 @@ const StringOrArray = new GraphQLScalarType({
   name: 'StringOrArray',
   description: 'Custom scalar that can be either a string or an array of strings',
   parseValue (value) {
-    return validate(value).value
+    const { value: validatedValue } = validate(value)
+    return validatedValue
   },
   serialize (value) {
-    return validate(value).value
+    const { value: validatedValue } = validate(value)
+    return validatedValue
   },
   parseLiteral (ast) {
     if (ast.kind === Kind.STRING) {
