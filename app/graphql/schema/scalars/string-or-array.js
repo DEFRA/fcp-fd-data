@@ -1,5 +1,6 @@
 import { GraphQLScalarType, Kind } from 'graphql'
 
+const invalidTypeError = 'Value must be either a string or an array of strings'
 const validate = (value) => {
   if (typeof value === 'string' || (Array.isArray(value) && value.every(item => typeof item === 'string'))) {
     return { value }
@@ -12,14 +13,14 @@ const StringOrArray = new GraphQLScalarType({
   parseValue (value) {
     const validatedValue = validate(value)
     if (validatedValue === undefined) {
-      throw new Error('Value must be either a string or an array of strings')
+      throw new Error(invalidTypeError)
     }
     return validatedValue.value
   },
   serialize (value) {
     const validatedValue = validate(value)
     if (validatedValue === undefined) {
-      throw new Error('Value must be either a string or an array of strings')
+      throw new Error(invalidTypeError)
     }
     return validatedValue.value
   },
@@ -37,7 +38,7 @@ const StringOrArray = new GraphQLScalarType({
       })
     }
 
-    throw new Error('Value must be either a string or an array of strings')
+    throw new Error(invalidTypeError)
   }
 })
 
