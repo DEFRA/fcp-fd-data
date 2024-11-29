@@ -1,5 +1,5 @@
-import commsEventByPK from './queries/AHWP/get-comms-event-by-id.js'
-import commsEventByProperty from './queries/AHWP/get-by-property.js'
+import commsEventByPK from './queries/get-comms-event-by-id.js'
+import commsEventByProperty from './queries/get-by-property.js'
 
 const commsResolvers = {
   Query: {

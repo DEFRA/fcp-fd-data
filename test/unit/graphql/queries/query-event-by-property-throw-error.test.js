@@ -1,4 +1,4 @@
-import commsByProperty from '../../../../app/graphql/resolvers/queries/AHWP/get-by-property'
+import commsByProperty from '../../../../app/graphql/resolvers/queries/get-by-property'
 import db from '../../../../app/data/index.js'
 import { jest } from '@jest/globals'
 
@@ -10,6 +10,6 @@ describe('commsByProperty query unit test', () => {
     })
 
     const result = async () => { await commsByProperty(null, { key: 'someKey', value: 'someValue' }) }
-    expect(result).rejects.toThrowError('Error executing query: Query execution failed')
+    expect(result).rejects.toThrowError('Query execution failed')
   })
 })
