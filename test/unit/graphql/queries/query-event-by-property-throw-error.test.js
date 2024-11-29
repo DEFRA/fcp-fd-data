@@ -1,4 +1,4 @@
-import commsByProperty from '../../../../app/graphql/resolvers/queries/AHWP/get-by-property.js'
+import commsByProperty from '../../../../app/graphql/queries/AHWP/get-by-property.js'
 import db from '../../../../app/data/index.js'
 import { jest } from '@jest/globals'
 

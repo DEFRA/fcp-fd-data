@@ -1,5 +1,5 @@
 import commsEnumMap from '../../../../app/graphql/schema/comms-message/comms-enum-map.js'
-import commsByProperty from '../../../../app/graphql/resolvers/queries/AHWP/get-by-property.js'
+import commsByProperty from '../../../../app/graphql/queries/AHWP/get-by-property.js'
 import db from '../../../../app/data/index.js'
 import { expect } from '@jest/globals'
 import validJSONCommsMessage from '../../../mocks/valid-comms-message-json-object.js'

@@ -1,5 +1,5 @@
 import { expect, jest } from '@jest/globals'
-import { TEST_ENV, DEV_ENV } from '../../app/constants/environments-codes'
+import { TEST_ENV, DEV_ENV } from '../../app/constants/enviroments-codes'
 
 describe('GraphQL Config', () => {
   afterEach(() => {

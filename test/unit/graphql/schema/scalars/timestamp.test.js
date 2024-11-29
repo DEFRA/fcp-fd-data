@@ -1,5 +1,5 @@
 import { Kind } from 'graphql'
-import TimestampType from '../../../../../app/graphql/resolvers/scalars/timestamp.js'
+import TimestampType from '../../../../../app/graphql/schema/scalars/timestamp.js'
 
 describe('TimestampType', () => {
   describe('serialize', () => {

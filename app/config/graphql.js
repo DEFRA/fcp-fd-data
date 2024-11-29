@@ -1,5 +1,5 @@
 import convict from 'convict'
-import { TEST_ENV, DEV_ENV } from '../constants/environments-codes.js'
+import { TEST_ENV, DEV_ENV } from '../constants/enviroments-codes.js'
 
 const graphql = convict({
   enableIntrospection: {
