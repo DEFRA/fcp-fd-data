@@ -2,7 +2,7 @@ import { GraphQLScalarType, Kind } from 'graphql'
 
 const validate = (value) => {
   if (typeof value === 'string' || (Array.isArray(value) && value.every(item => typeof item === 'string'))) {
-    return value
+    return { value }
   }
   throw new Error('Value must be either a string or an array of strings')
 }
@@ -11,10 +11,10 @@ const StringOrArray = new GraphQLScalarType({
   name: 'StringOrArray',
   description: 'Custom scalar that can be either a string or an array of strings',
   parseValue (value) {
-    return validate(value)
+    return validate(value).value
   },
   serialize (value) {
-    return validate(value)
+    return validate(value).value
   },
   parseLiteral (ast) {
     if (ast.kind === Kind.STRING) {
