@@ -61,5 +61,5 @@ azureIdentity:
 
 ingress:
   class: nginx
-  endpoint: ffc-fd-data
-  server: example.com
+  endpoint: fcp-fd-data
+  server:

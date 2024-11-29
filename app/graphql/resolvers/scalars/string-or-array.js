@@ -1,6 +1,6 @@
 import { GraphQLScalarType, Kind } from 'graphql'
 
-function validate (value) {
+const validate = (value) => {
   if (typeof value === 'string' || (Array.isArray(value) && value.every(item => typeof item === 'string'))) {
     return { value, error: null }
   }

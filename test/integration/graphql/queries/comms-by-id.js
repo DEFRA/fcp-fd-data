@@ -14,7 +14,7 @@ export default {
           sourceSystem
           emailReplyToId
           statusDetails
-          coorelationId
+          correlationId
           personalisation
         }
         time

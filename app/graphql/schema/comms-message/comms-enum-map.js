@@ -11,7 +11,7 @@ const commsEnumMap = {
   SOURCE_SYSTEM: 'data.sourceSystem',
   EMAIL_REPLY_TO_ID: 'data.emailReplyToId',
   STATUS_DETAILS: 'data.statusDetails',
-  COORELATION_ID: 'data.coorelationId',
+  CORRELATION_ID: 'data.correlationId',
   PERSONALISATION: 'data.personalisation'
 }
 

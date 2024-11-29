@@ -1,4 +1,4 @@
-import commsResolvers from './comms-message.js'
+import commsResolvers from './comms-resolvers.js'
 import scalars from './scalars/index.js'
 
 const resolvers = {

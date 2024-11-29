@@ -1,7 +1,7 @@
 import { Op } from 'sequelize'
 import db from '../../../../data/index.js'
 import commsEnumMap from '../../../schema/comms-message/comms-enum-map.js'
-import queryCommsEvent from './get-by-property-commsaddress.js'
+import getCommsEventByCommsAddresses from './get-by-property-commsaddress.js'
 
 const commsByProperty = async (_, { key, value }) => {
   const mappedKey = commsEnumMap[key]
@@ -9,7 +9,7 @@ const commsByProperty = async (_, { key, value }) => {
 
   try {
     if (mappedKey === commsEnumMap.COMMS_ADDRESSES) {
-      const result = await queryCommsEvent(mappedKey, value)
+      const result = await getCommsEventByCommsAddresses(mappedKey, value)
       return result
     } else {
       const result = await db.commsEvent.findAll({

@@ -1,7 +1,7 @@
 import { Op } from 'sequelize'
 import db from '../../../../data/index.js'
 
-const queryCommsEvent = async (mappedKey, value) => {
+const getCommsEventByCommsAddresses = async (mappedKey, value) => {
   return await db.commsEvent.findAll({
     where: {
       [Op.or]: [
@@ -12,4 +12,4 @@ const queryCommsEvent = async (mappedKey, value) => {
   })
 }
 
-export default queryCommsEvent
+export default getCommsEventByCommsAddresses

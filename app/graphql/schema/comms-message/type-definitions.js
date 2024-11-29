@@ -1,67 +1,144 @@
 const commsMessageTypeDefs = `#graphql
-# Scalars for custom data types
-scalar JSON # Represents a JSON object
-scalar Timestamp # Custom scalar for timestamp values
-scalar JSONObject # Represents a generic JSON object
-scalar StringOrArray # Represents a string or an array of strings
+""" Scalars for custom data types """
+scalar JSON
+scalar Timestamp
+scalar JSONObject
+scalar StringOrArray
 
-# Availble queries operations
+""" Available query operations """
 type Query {
-  commsEventByPK(id: String!): CommsEvent # GET a specific comms event by its ID
-  commsEventByProperty(key: commsEnum!, value: StringOrArray!): [CommsEvent] # GET comms events filtered by a specific property and value
+  """
+  GET a specific comms event by its ID
+  """
+  commsEventByPK(id: String!): CommsEvent
+
+  """
+  GET comms events filtered by a specific property and value
+  """
+  commsEventByProperty(key: commsEnum!, value: StringOrArray!): [CommsEvent]
 }
 
-# comms-event received from the upstream comms service
+""" Comms event received from the upstream comms service """
 type CommsEvent {
-  id: String # Unique identifier for the comms event UUID standard
-  dateCreated: Timestamp # Date and time when event has been saved in fd-data database
-  commsMessage: commsMessageDetails # Details of the event message
+  """ Unique identifier for the comms event (UUID standard) """
+  id: String
+
+  """ Date and time when event has been saved in fd-data database """
+  dateCreated: Timestamp
+
+  """ Details of the event message """
+  commsMessage: commsMessageDetails
 }
 
-# Details of a communication message
+""" Details of a communication message """
 type commsMessageDetails {
-  id: String # Unique identifier for the comms message
-  data: commsData # Structured business data related to the comms message
-  time: Timestamp # Time of the message
-  type: String # Type of the message
-  source: String # Source system of the message
-  specversion: String # Specification version of the message Cloud Events format
-  datacontenttype: String # Content type of the message data
+  """ Unique identifier for the comms message """
+  id: String
+
+  """ Structured business data related to the comms message """
+  data: commsData
+
+  """ Time of the message """
+  time: Timestamp
+
+  """ Type of the message """
+  type: String
+
+  """ Source system of the message """
+  source: String
+
+  """ Specification version of the message (Cloud Events format) """
+  specversion: String
+
+  """ Content type of the message data """
+  datacontenttype: String
 }
 
-# Data structure for communication content
+""" Data structure for communication content """
 type commsData {
-  crn: Int # Customer Reference Number
-  sbi: Int # Single Business Identifier
-  commsType: String # Type of the communication email, sms, etc.
-  reference: String # Reference identifier for the communication
-  commsAddresses: StringOrArray # Address (email, phone, etc.) for the communication
-  sourceSystem: String # System that generated the communication
-  emailReplyToId: String # Reply-to GovNOtify identifier for email communication
-  statusDetails: JSONObject # Detailed status of the communication
-  coorelationId: String # Correlation ID for tracking
-  personalisation: JSONObject # Personalisation data for the GovNotify communication
+  """ Customer Reference Number """
+  crn: Int
+
+  """ Single Business Identifier """
+  sbi: Int
+
+  """ Type of the communication (e.g., email, sms) """
+  commsType: String
+
+  """ Reference identifier for the communication """
+  reference: String
+
+  """ Address (email, phone, etc.) for the communication """
+  commsAddresses: StringOrArray
+
+  """ System that generated the communication """
+  sourceSystem: String
+
+  """ Reply-to GovNotify identifier for email communication """
+  emailReplyToId: String
+
+  """ Detailed status of the communication """
+  statusDetails: JSONObject
+
+  """ Correlation ID for tracking """
+  correlationId: String
+
+  """ Personalisation data for the GovNotify communication """
+  personalisation: JSONObject
 }
 
-# Enumeration for comms properties
+""" Enumeration for comms properties """
 enum commsEnum {
-  ID # UUID of the comms event
-  TIME # Date the event was created in database
-  TYPE # Type of the message
-  SOURCE # Source system
-  SPECVERSION # Specification version
-  DATACONTENTTYPE # Data content type
-  DATE_CREATED # Date the event was created
-  COMMS_MESSAGE # comms message object
-  CRN # Customer Reference Number
-  SBI # Single Business Identifier
-  COMMS_TYPE # Type of the communication (default : email)
-  REFERENCE # Reference identifier
-  COMMS_ADDRESSES # Communication address
-  SOURCE_SYSTEM # Source system of the communication
-  EMAIL_REPLY_TO_ID # Reply-to identifier for emails
-  COORELATION_ID # Correlation ID for tracking
-  PERSONALISATION # Personalisation data
+  """ UUID of the comms event """
+  ID
+
+  """ Date the event was created in database """
+  TIME
+
+  """ Type of the message """
+  TYPE
+
+  """ Source system """
+  SOURCE
+
+  """ Specification version """
+  SPECVERSION
+
+  """ Data content type """
+  DATACONTENTTYPE
+
+  """ Date the event was created """
+  DATE_CREATED
+
+  """ Comms message object """
+  COMMS_MESSAGE
+
+  """ Customer Reference Number """
+  CRN
+
+  """ Single Business Identifier """
+  SBI
+
+  """ Type of the communication (default: email) """
+  COMMS_TYPE
+
+  """ Reference identifier """
+  REFERENCE
+
+  """ Communication address """
+  COMMS_ADDRESSES
+
+  """ Source system of the communication """
+  SOURCE_SYSTEM
+
+  """ Reply-to identifier for emails """
+  EMAIL_REPLY_TO_ID
+
+  """ Correlation ID for tracking """
+  CORRELATION_ID
+
+  """ Personalisation data """
+  PERSONALISATION
 }
 `
 

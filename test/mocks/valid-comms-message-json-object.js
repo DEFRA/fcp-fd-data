@@ -10,7 +10,7 @@ const validCommsMessage = {
       sourceSystem: 'test-sourceSystem',
       emailReplyToId: 'test-emailReplyToId',
       statusDetails: { detail: 'test-statusDetails' },
-      coorelationId: 'test-coorelationId',
+      correlationId: 'test-correlationId',
       personalisation: { key: 'test-personalisation' }
     },
     time: new Date(),

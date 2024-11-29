@@ -16,7 +16,7 @@ const commsEventbyPK = async (_, { id }) => {
         sourceSystem: event.commsMessage.data.sourceSystem,
         emailReplyToId: event.commsMessage.data.emailReplyToId,
         statusDetails: event.commsMessage.data.statusDetails,
-        coorelationId: event.commsMessage.data.coorelationId,
+        correlationId: event.commsMessage.data.correlationId,
         personalisation: event.commsMessage.data.personalisation
       },
       time: event.commsMessage.time,

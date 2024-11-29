@@ -22,5 +22,4 @@
     <changeSet author="Defra" id="5">
         <addDefaultValue tableName="commsEvent" columnName="dateCreated" defaultValueComputed="CURRENT_TIMESTAMP" />
     </changeSet>
-
 </databaseChangeLog>
