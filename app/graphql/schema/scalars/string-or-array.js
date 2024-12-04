@@ -3,11 +3,12 @@ import { GraphQLScalarType, Kind } from 'graphql'
 const invalidTypeError = 'Value must be either a string or an array of strings'
 
 const parse = (value) => {
+  const result = { value }
   const isValidArray = Array.isArray(value) &&
     value.every(item => typeof item === 'string')
 
   if (typeof value === 'string' || isValidArray) {
-    return value
+    return result
   }
 
   throw new Error(invalidTypeError)
@@ -16,8 +17,12 @@ const parse = (value) => {
 const StringOrArray = new GraphQLScalarType({
   name: 'StringOrArray',
   description: 'Custom scalar that can be either a string or an array of strings',
-  parseValue: parse,
-  serialize: parse,
+  parseValue: (value) => {
+    return parse(value).value
+  },
+  serialize: (value) => {
+    return parse(value).value
+  },
   parseLiteral: (ast) => {
     if (ast.kind === Kind.STRING) {
       return ast.value
