@@ -1,4 +1,4 @@
-import commsByProperty from '../../../../app/graphql/resolvers/queries/get-by-property'
+import getCommsEventByProperty from '../../../../app/graphql/resolvers/queries/get-comms-event-by-property'
 import db from '../../../../app/data/index.js'
 import { jest } from '@jest/globals'
 
@@ -9,7 +9,7 @@ describe('commsByProperty query unit test', () => {
       throw mockError
     })
 
-    const result = async () => { await commsByProperty(null, { key: 'someKey', value: 'someValue' }) }
+    const result = async () => { await getCommsEventByProperty(null, { key: 'someKey', value: 'someValue' }) }
     expect(result).rejects.toThrowError('Query execution failed')
   })
 })

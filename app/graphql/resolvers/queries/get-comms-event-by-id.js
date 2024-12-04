@@ -1,6 +1,6 @@
 import db from '../../../data/index.js'
 
-const commsEventbyPK = async (_, { id }) => {
+const getCommsEventById = async (_, { id }) => {
   const event = await db.commsEvent.findByPk(id)
   return {
     id: event.id,
@@ -28,4 +28,4 @@ const commsEventbyPK = async (_, { id }) => {
   }
 }
 
-export default commsEventbyPK
+export default getCommsEventById

@@ -1,4 +1,4 @@
-const commsMessageTypeDefs = `#graphql
+const typeDefinitions = `#graphql
 """ Scalars for custom data types """
 scalar JSON
 scalar Timestamp
@@ -142,4 +142,4 @@ enum commsEnum {
 }
 `
 
-export default commsMessageTypeDefs
+export default typeDefinitions

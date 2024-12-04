@@ -1,7 +1,7 @@
-import commsMessageTypeDefs from './comms-message/type-definitions.js'
+import typeDefinitions from './comms-message/type-definitions.js'
 
 const typeDefs = [
-  commsMessageTypeDefs
+  typeDefinitions
 ]
 
 export default typeDefs
