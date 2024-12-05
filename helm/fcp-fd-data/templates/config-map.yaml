@@ -15,4 +15,5 @@ data:
   COMMS_TOPIC_ADDRESS: {{ .Values.container.commsTopicAddress | quote }}
   {{- end }}
   COMMS_SUBSCRIPTION_ADDRESS: {{ .Values.container.commsSubscriptionAddress }}
+  ENVIRONMENT_CODE: {{ quote .Values.environmentCode }}
 {{- end -}}

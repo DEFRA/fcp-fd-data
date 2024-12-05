@@ -1,4 +1,4 @@
-import { createServer } from '../../../../app/server.js'
+import { createServer } from '../../../../app/server/server.js'
 
 describe('healthy test', () => {
   let server
@@ -6,6 +6,9 @@ describe('healthy test', () => {
   beforeEach(async () => {
     server = await createServer()
     await server.initialize()
+  })
+  afterAll(async () => {
+    await server.stop()
   })
 
   test('GET /healthy route returns 200', async () => {
