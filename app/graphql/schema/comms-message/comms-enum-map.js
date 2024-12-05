@@ -1,4 +1,5 @@
 const commsEnumMap = {
+  ID: 'id',
   TIME: 'time',
   TYPE: 'type',
   SOURCE: 'source',
