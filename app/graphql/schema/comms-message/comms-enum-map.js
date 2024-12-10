@@ -13,7 +13,8 @@ const commsEnumMap = {
   EMAIL_REPLY_TO_ID: 'data.emailReplyToId',
   STATUS_DETAILS: 'data.statusDetails',
   CORRELATION_ID: 'data.correlationId',
-  PERSONALISATION: 'data.personalisation'
+  PERSONALISATION: 'data.personalisation',
+  NOTIFY_TEMPLATE_ID: 'data.notifyTemplateId'
 }
 
 export default commsEnumMap

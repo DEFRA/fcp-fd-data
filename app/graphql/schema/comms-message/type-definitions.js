@@ -85,6 +85,9 @@ type commsData {
 
   """ Personalisation data for the GovNotify communication """
   personalisation: JSONObject
+
+  """ govNotify template ID """
+  notifyTemplateId: String
 }
 
 """ Enumeration for comms properties """
@@ -139,6 +142,9 @@ enum commsEnum {
 
   """ Personalisation data """
   PERSONALISATION
+
+  """ GovNotify template ID """
+  NOTIFY_TEMPLATE_ID
 }
 `
 
