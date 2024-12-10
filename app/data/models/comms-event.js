@@ -5,6 +5,11 @@ export default (sequelize, DataTypes) => {
       primaryKey: true,
       allowNull: false
     },
+    dateCreated: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW
+    },
     commsMessage: {
       type: DataTypes.JSONB,
       allowNull: false
