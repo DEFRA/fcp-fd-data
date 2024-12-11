@@ -17,7 +17,8 @@ const getCommsEventById = async (_, { id }) => {
         emailReplyToId: event.commsMessage.data.emailReplyToId,
         statusDetails: event.commsMessage.data.statusDetails,
         correlationId: event.commsMessage.data.correlationId,
-        personalisation: event.commsMessage.data.personalisation
+        personalisation: event.commsMessage.data.personalisation,
+        notifyTemplateId: event.commsMessage.data.notifyTemplateId
       },
       time: event.commsMessage.time,
       type: event.commsMessage.type,
