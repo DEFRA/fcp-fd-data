@@ -1,2 +1,5 @@
-export const TEST_ENV = 'test'
-export const DEV_ENV = 'dev'
+export const SND = 'snd'
+export const DEV = 'dev'
+export const TEST = 'test'
+export const PRE = 'pre'
+export const PRD = 'prd'
