@@ -1,4 +1,4 @@
-import { jest } from '@jest/globals'
+import { afterEach, jest } from '@jest/globals'
 import { DEV, PRD, PRE, SND, TEST } from '../../../app/constants/enviroments-codes.js'
 
 afterEach(() => {
@@ -10,7 +10,6 @@ describe('apollo server setup', () => {
   test('disable landing page plugin when environment code is prd ', async () => {
     process.env.ENVIRONMENT_CODE = PRD
     const apolloServer = await import('../../../app/graphql/apollo-server')
-    expect(apolloServer.default.internals.plugins[0].__internal_plugin_id__).toBe('LandingPageDisabled')
     expect(apolloServer.default.internals.plugins[0].__internal_plugin_id__).toBe('LandingPageDisabled')
   })
 

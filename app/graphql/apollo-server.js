@@ -4,11 +4,10 @@ import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin
 import { graphqlConfig } from '../config/index.js'
 import resolvers from './resolvers/index.js'
 import typeDefs from './schema/index.js'
-import { DEV, SND, TEST } from '../constants/enviroments-codes.js'
-
+import { isLowerEnv } from '../utils/is-lower-env.js'
 let plugins = []
 
-if (![SND, DEV, TEST].includes(process.env.ENVIRONMENT_CODE)) {
+if (!isLowerEnv(process.env.ENVIRONMENT_CODE)) {
   plugins = [ApolloServerPluginLandingPageDisabled()]
 } else {
   plugins = [ApolloServerPluginLandingPageLocalDefault({ embed: true })]
