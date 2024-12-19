@@ -2,11 +2,12 @@ import db from '../../app/data/index.js'
 
 beforeEach(async () => {
   await db.sequelize.truncate({ cascade: true })
-  await db.commsEvent.create({ id: '44925853-76f7-435f-adb9-158af77e9f01', dateCreated: new Date(), commsMessage: { message: 'Hello, world!' } })
-  await db.fileMetadata.create({ id: '44925853-76f7-435f-adb9-158af77e9f01', dateCreated: new Date(), commsMessage: { message: 'Hello, world!' } })
+  await db.commsEvent.create({ id: '44925853-76f7-435f-adb9-158af77e9f01', commsMessage: { message: 'Hello, world!' } })
+  await db.fileMetadata.create({ id: '44925853-76f7-435f-adb9-158af77e9f02', metadata: { someData: 'Hello, world!' } })
 })
 
 afterAll(async () => {
+  await db.sequelize.truncate({ cascade: true })
   await db.sequelize.close()
 })
 
