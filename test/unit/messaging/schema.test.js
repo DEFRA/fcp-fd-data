@@ -1,6 +1,6 @@
 import INVALID_MESSAGE from '../../mocks/invalid-comms-message'
 import VALID_MESSAGE from '../../mocks/valid-comms-message'
-import schema from '../../../app/messaging/comms-message/schema'
+import schema from '../../../app/messaging/schemas/comms-message'
 
 describe('Schema Validation', () => {
   test('should validate a correct object', () => {
