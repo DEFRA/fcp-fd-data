@@ -1,5 +1,6 @@
 import { COMMS_EVENT, FILE_METADATA } from '../constants/message-types.js'
 import processCommsMessage from './messages/process-comms-message.js'
+import processFileMetadata from './messages/process-file-metadata.js'
 
 // TODO refactor once aysncapi updated
 const processInboundMessage = async (message, receiver) => {
@@ -11,7 +12,7 @@ const processInboundMessage = async (message, receiver) => {
         break
       case message.body.hasOwnProperty(FILE_METADATA): //eslint-disable-line
         console.log('Processing fileMetadata')
-        // await processFileMetadata(message)
+        await processFileMetadata(message)
         break
       default:
         throw new Error('Invalid message type')

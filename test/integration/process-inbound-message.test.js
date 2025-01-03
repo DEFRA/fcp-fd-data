@@ -3,6 +3,7 @@ import { beforeEach, jest } from '@jest/globals'
 import processInboundMessage from '../../app/messaging/process-inbound-message'
 import db from '../../app/data/index'
 import { commsMessage } from '../mocks/comms-message'
+import validFileMetadata from '../mocks/file-metadata/valid.js'
 
 const mockReceiver = {
   abandonMessage: jest.fn(),
@@ -53,5 +54,13 @@ describe('inbound message tests', () => {
   test('Should call completeMessage when a valid commsMessage', async () => {
     await processInboundMessage(validCommsMessage, mockReceiver)
     expect(mockReceiver.completeMessage).toHaveBeenCalled()
+  })
+
+  test('Should create a fileMetadata record in metadata table when type is FILE_METADATA', async () => {
+    await processInboundMessage(validFileMetadata, mockReceiver)
+    const savedMessage = await db.fileMetadata.findByPk(validFileMetadata.body.id)
+    console.log('savedMessage', savedMessage)
+    expect(savedMessage.metadata).toStrictEqual(validFileMetadata.body.metadata)
+    expect(savedMessage.id).toBe(validFileMetadata.body.id)
   })
 })

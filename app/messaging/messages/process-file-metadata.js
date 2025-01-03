@@ -1,0 +1,24 @@
+import schema from '../schemas/file-metadata.js'
+import db from '../../data/index.js'
+
+const processFileMetadata = async (message, receiver) => {
+  try {
+    const { error, value: validData } = schema.validate(message.body)
+    if (error) {
+      console.error('Validation error:', error.details)
+      await receiver.abandonMessage(message)
+      return
+    }
+
+    validData.dateCreated = new Date().toISOString()
+    console.log('validData', validData)
+    await db.fileMetadata.create(validData)
+    await receiver.completeMessage(message)
+    console.log('File metadata message processed successfully, eventId:', validData.fileMetadata.id)
+  } catch (err) {
+    console.error('Unable to process request:', err)
+    await receiver.abandonMessage(message)
+  }
+}
+
+export default processFileMetadata
