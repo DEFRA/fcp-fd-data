@@ -2,7 +2,7 @@ import { beforeEach, jest } from '@jest/globals'
 // import { COMMS_EVENT, FILE_METADATA } from '../../app/constants/message-types'
 import processInboundMessage from '../../app/messaging/process-inbound-message'
 import db from '../../app/data/index'
-import { commsMessage } from '../mocks/comms-message'
+import { commsMessage } from '../mocks/comms-message/comms-message.js'
 import validFileMetadata from '../mocks/file-metadata/valid.js'
 
 const mockReceiver = {

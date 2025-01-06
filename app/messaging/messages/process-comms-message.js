@@ -9,7 +9,6 @@ const processCommsMessage = async (message, receiver) => {
       await receiver.abandonMessage(message)
       return
     }
-
     validData.dateCreated = new Date().toISOString()
 
     await db.commsEvent.create(validData)

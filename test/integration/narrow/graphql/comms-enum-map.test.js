@@ -2,7 +2,7 @@ import commsEnumMap from '../../../../app/graphql/schema/comms-message/comms-enu
 import getCommsEventByProperty from '../../../../app/graphql/resolvers/queries/get-comms-event-by-property.js'
 import db from '../../../../app/data/index.js'
 import { expect } from '@jest/globals'
-import validJSONCommsMessage from '../../../mocks/valid-comms-message-json-object.js'
+import validJSONCommsMessage from '../../../mocks/comms-message/valid-comms-message.js'
 
 describe('commsByProperty', () => {
   beforeAll(async () => {

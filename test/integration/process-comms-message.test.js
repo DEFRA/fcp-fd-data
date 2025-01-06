@@ -1,7 +1,7 @@
 import processCommsMessage from '../../app/messaging/messages/process-comms-message'
 import db from '../../app/data/index'
 import { jest } from '@jest/globals'
-import VALID_MESSAGE from '../mocks/valid-comms-message'
+import VALID_MESSAGE from '../mocks/comms-message/valid-comms-message'
 import schema from '../../app/messaging/schemas/comms-message'
 
 jest.mock('@azure/service-bus', () => {
@@ -37,20 +37,21 @@ describe('processCommsMessage', () => {
   })
 
   test('should process a valid message', async () => {
-    await processCommsMessage(VALID_MESSAGE, receiver)
-    const savedMessage = await db.commsEvent.findByPk(VALID_MESSAGE.body.id)
+    await processCommsMessage({ body: { ...VALID_MESSAGE } }, receiver)
+    const savedMessage = await db.commsEvent.findByPk(VALID_MESSAGE.id)
     expect(savedMessage).not.toBeNull()
-    expect(savedMessage.dataValues.commsMessage.message).toBe('Hello, World!')
-    expect(receiver.completeMessage).toHaveBeenCalledWith(VALID_MESSAGE)
+    expect(savedMessage.dataValues.commsMessage.id).toBe(VALID_MESSAGE.commsMessage.id)
+    expect(receiver.completeMessage).toHaveBeenCalledWith({ body: { ...VALID_MESSAGE } })
   })
+
   test('should abandon message when internal error occurs', async () => {
     const internalError = new Error('Database error')
     jest.spyOn(db.commsEvent, 'create').mockImplementation(() => {
       throw internalError
     })
-    await processCommsMessage(VALID_MESSAGE, receiver)
+    await processCommsMessage({ body: { ...VALID_MESSAGE } }, receiver)
     expect(console.error).toHaveBeenCalledWith('Unable to process request:', internalError)
-    expect(receiver.abandonMessage).toHaveBeenCalledWith(VALID_MESSAGE)
+    expect(receiver.abandonMessage).toHaveBeenCalledWith({ body: { ...VALID_MESSAGE } })
   })
 
   test('should abandon message when validation error occurs', async () => {

@@ -1,5 +1,5 @@
 import db from '../../../app/data/index.js'
-import validCommsMessage from '../../mocks/valid-comms-message-json-object.js'
+import validCommsMessage from '../../mocks/comms-message/valid-comms-message.js'
 import commsEventByPropertyQuery from './queries/comms-by-property.js'
 import registerApollo from '../../../app/server/start.js'
 import createTestCases from '../../helper-functions/create-database-entries.js'
@@ -9,7 +9,7 @@ describe('GQL queries', () => {
 
   beforeAll(async () => {
     await createTestCases(validCommsMessage, db.commsEvent, { 'commsMessage.data.crn': 1234567890 }, 2)
-    await createTestCases(validCommsMessage, db.commsEvent, { 'commsMessage.data.sourceSystem': 'newsourceSystem', 'commsMessage.data.crn': 223456789 }, 1)
+    await createTestCases(validCommsMessage, db.commsEvent, { 'commsMessage.data.sourceSystem': 'newsourceSystem', 'commsMessage.data.crn': 223456789, 'commsMessage.data.commsAddresses': 'test-commsAddress' }, 1)
     await createTestCases(validCommsMessage, db.commsEvent, { 'commsMessage.data.sourceSystem': 'newsourceSystem', 'commsMessage.data.crn': 223456790, 'commsMessage.data.commsAddresses': ['commsAddress1', 'commsAddress2'] }, 1)
     await createTestCases(validCommsMessage, db.commsEvent, { 'commsMessage.data.sourceSystem': 'newsourceSystem', 'commsMessage.data.commsAddresses': 'commsAddress1' }, 2)
     server = await registerApollo()
@@ -82,7 +82,7 @@ describe('GQL queries', () => {
         ...commsEventByPropertyQuery,
         variables: {
           key: 'REFERENCE',
-          value: 'test-reference'
+          value: 'ffc-ahwr-example-reference'
         }
       })
     }
@@ -131,15 +131,15 @@ describe('GQL queries', () => {
         ...commsEventByPropertyQuery,
         variables: {
           key: 'CRN',
-          value: '223456789'
+          value: '1050000000'
         }
       })
     }
     const response = await server.inject(options)
     const responseBody = JSON.parse(response.result)
     expect(responseBody.errors).toBeUndefined()
-    expect(responseBody.data.commsEventByProperty[0].commsMessage.data.crn).toBe(223456789)
-    expect(responseBody.data.commsEventByProperty[0].commsMessage.data.commsAddresses).toStrictEqual('test-commsAddress')
+    expect(responseBody.data.commsEventByProperty[0].commsMessage.data.crn).toBe(1050000000)
+    expect(responseBody.data.commsEventByProperty[0].commsMessage.data.commsAddresses).toStrictEqual('commsAddress1')
   })
 
   test('returns mixed commsAddresses types correctly', async () => {
@@ -185,9 +185,9 @@ describe('GQL queries', () => {
     const response = await server.inject(options)
     const responseBody = JSON.parse(response.result)
     expect(responseBody.errors).toBeUndefined()
-    expect(responseBody.data.commsEventByProperty.length).toBe(3)
     expect(responseBody.data.commsEventByProperty[0].commsMessage.data.commsAddresses).toStrictEqual(['commsAddress1', 'commsAddress2'])
     expect(responseBody.data.commsEventByProperty[1].commsMessage.data.commsAddresses).toStrictEqual('commsAddress1')
     expect(responseBody.data.commsEventByProperty[2].commsMessage.data.commsAddresses).toStrictEqual('commsAddress1')
+    expect(responseBody.data.commsEventByProperty.length).toBe(3)
   })
 })
