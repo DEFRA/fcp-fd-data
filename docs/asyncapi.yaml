@@ -49,11 +49,11 @@ components:
       type: object
       required:
         - id
-        - fileMetadata
+        - metadata
       properties:
         id:
           $ref: '#/components/schemas/id'
-        fileMetadata:
+        metadata:
           $ref: '#/components/schemas/fileMetadata'
       additionalProperties: false
 
@@ -73,7 +73,7 @@ components:
             data:
               placeholder: "data goes here"
 
-    fileMetadata:
+    metadata:
       type: object
       description: metadata for uploaded files in in Cloud Events format
       example:
@@ -84,7 +84,7 @@ components:
           specversion: "1.0"
           datacontenttype: "application/json"
           data:
-            metadata: "data goes here"
+            placeholder: "data goes here"
 
     id:
       type: string
