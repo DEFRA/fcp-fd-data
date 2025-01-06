@@ -1,4 +1,4 @@
-import schema from '../schemas/comms-message.js'
+import schema from '../schemas/comms-message/schema.js'
 import db from '../../data/index.js'
 
 const processCommsMessage = async (message, receiver) => {

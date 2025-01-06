@@ -1,4 +1,4 @@
-import schema from '../schemas/file-metadata.js'
+import schema from '../schemas/file-metadata/schema.js'
 import db from '../../data/index.js'
 
 const processFileMetadata = async (message, receiver) => {

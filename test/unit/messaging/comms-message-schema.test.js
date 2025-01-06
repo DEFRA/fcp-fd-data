@@ -1,6 +1,5 @@
-// import INVALID_MESSAGE from '../../mocks/comms-message/invalid-comms-message'
 import VALID_MESSAGE from '../../mocks/comms-message/valid-comms-message.js'
-import schema from '../../../app/messaging/schemas/comms-message.js'
+import schema from '../../../app/messaging/schemas/comms-message/schema.js'
 
 const INVALID_MESSAGE = { body: { ...VALID_MESSAGE } }
 INVALID_MESSAGE.body.id = 'invalid-id'
@@ -40,7 +39,6 @@ describe('Schema Validation', () => {
       ...VALID_MESSAGE,
       commsMessage: 'not-an-object'
     }
-    console.log('invalidObject', invalidObject)
     const { error } = schema.validate(invalidObject)
     expect(error.details[0].message).toBe('commsMessage should be a type of object')
   })
