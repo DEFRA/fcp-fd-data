@@ -38,7 +38,6 @@ describe('processCommsMessage', () => {
 
   test('should process a valid message', async () => {
     await processFileMetadata(VALID_MESSAGE, receiver)
-    console.log('VALID_MESSAGE', VALID_MESSAGE)
     const savedMessage = await db.fileMetadata.findByPk(VALID_MESSAGE.body.id)
     expect(savedMessage).not.toBeNull()
     expect(savedMessage.dataValues.metadata.filename).toBe('hello-world.pdf')

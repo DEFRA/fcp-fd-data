@@ -6,11 +6,9 @@ const processInboundMessage = async (message, receiver) => {
   try {
     switch (true) {
       case message.body.hasOwnProperty(COMMS_EVENT): //eslint-disable-line
-        console.log('Processing commsMessage')
         await processCommsMessage(message, receiver)
         break
       case message.body.hasOwnProperty(FILE_METADATA): //eslint-disable-line
-        console.log('Processing fileMetadata')
         await processFileMetadata(message, receiver)
         break
       default:
