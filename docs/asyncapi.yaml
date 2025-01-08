@@ -54,7 +54,7 @@ components:
         id:
           $ref: '#/components/schemas/id'
         metadata:
-          $ref: '#/components/schemas/fileMetadata'
+          $ref: '#/components/schemas/metadata'
       additionalProperties: false
 
     commsMessage:
