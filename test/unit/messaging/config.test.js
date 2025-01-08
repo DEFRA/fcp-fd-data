@@ -24,8 +24,8 @@ describe('Service Bus Configuration', () => {
     process.env.MESSAGE_QUEUE_USER = 'mock-prd-user'
     process.env.MESSAGE_QUEUE_PASSWORD = 'mock-prd-password'
     process.env.AZURE_CLIENT_ID = 'mock-prd-client-id'
-    process.env.COMMS_SUBSCRIPTION_ADDRESS = 'mock-prd-subscription-address'
-    process.env.COMMS_TOPIC_ADDRESS = 'mock-prd-topic-address'
+    process.env.DATA_SUBSCRIPTION_ADDRESS = 'mock-prd-subscription-address'
+    process.env.DATA_TOPIC_ADDRESS = 'mock-prd-topic-address'
 
     const { messageConfig } = await import('../../../app/config/index.js')
 
@@ -54,8 +54,8 @@ describe('Service Bus Configuration', () => {
     process.env.MESSAGE_QUEUE_USER = 'mock-dev-user'
     process.env.MESSAGE_QUEUE_PASSWORD = 'mock-dev-password'
     process.env.AZURE_CLIENT_ID = 'mock-dev-client-id'
-    process.env.COMMS_SUBSCRIPTION_ADDRESS = 'mock-dev-subscription-address'
-    process.env.COMMS_TOPIC_ADDRESS = 'mock-dev-topic-address'
+    process.env.DATA_SUBSCRIPTION_ADDRESS = 'mock-dev-subscription-address'
+    process.env.DATA_TOPIC_ADDRESS = 'mock-dev-topic-address'
 
     const { messageConfig } = await import('../../../app/config/index.js')
 
