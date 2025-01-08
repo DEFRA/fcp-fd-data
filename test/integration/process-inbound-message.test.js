@@ -59,7 +59,6 @@ describe('inbound message tests', () => {
   test('Should create a fileMetadata record in metadata table when type is FILE_METADATA', async () => {
     await processInboundMessage(validFileMetadata, mockReceiver)
     const savedMessage = await db.fileMetadata.findByPk(validFileMetadata.body.id)
-    console.log('savedMessage', savedMessage)
     expect(savedMessage.metadata).toStrictEqual(validFileMetadata.body.metadata)
     expect(savedMessage.id).toBe(validFileMetadata.body.id)
   })
