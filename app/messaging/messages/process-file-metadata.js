@@ -7,8 +7,7 @@ const processFileMetadata = async (message, receiver) => {
 
     if (error) {
       console.error('Validation error:', error.details)
-      await receiver.abandonMessage(message)
-      return
+      await receiver.deadLetterMessage(message)
     }
 
     validData.dateCreated = new Date().toISOString()
@@ -17,7 +16,7 @@ const processFileMetadata = async (message, receiver) => {
     console.log('File metadata message processed successfully, eventId:', validData.id)
   } catch (err) {
     console.error('Unable to process request:', err)
-    await receiver.abandonMessage(message)
+    await receiver.deadLetterMessage(message)
   }
 }
 

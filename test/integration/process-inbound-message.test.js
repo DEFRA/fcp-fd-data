@@ -5,21 +5,24 @@ import db from '../../app/data/index'
 import { commsMessage } from '../mocks/comms-message/comms-message.js'
 import validFileMetadata from '../mocks/file-metadata/valid.js'
 
+const id = 'a058de5b-42ad-473c-91e7-0797a43fda30'
+
 const mockReceiver = {
-  abandonMessage: jest.fn(),
-  completeMessage: jest.fn()
+  deadLetterMessage: jest.fn(),
+  completeMessage: jest.fn(),
+  abandonMessage: jest.fn()
 }
 
 const validCommsMessage = {
   body: {
-    id: 'a058de5b-42ad-473c-91e7-0797a43fda30',
+    id,
     commsMessage
   }
 }
 
 const invalidMessage = {
   body: {
-    id: 'a058de5b-42ad-473c-91e7-0797a43fda30',
+    id,
     invalidMessageType: commsMessage
   }
 }
@@ -30,12 +33,12 @@ beforeEach(async () => {
 describe('inbound message tests', () => {
   test('Should abandon message when not a valid message type', async () => {
     await processInboundMessage(invalidMessage, mockReceiver)
-    expect(mockReceiver.abandonMessage).toHaveBeenCalled()
+    expect(mockReceiver.deadLetterMessage).toHaveBeenCalled()
   })
 
   test('Should abandon message when message is empty', async () => {
     await processInboundMessage({}, mockReceiver)
-    expect(mockReceiver.abandonMessage).toHaveBeenCalled()
+    expect(mockReceiver.deadLetterMessage).toHaveBeenCalled()
   })
 
   test('Should not create a commsEvent in commsEvent table when invalid message type used', async () => {

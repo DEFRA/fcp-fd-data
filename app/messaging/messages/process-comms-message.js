@@ -5,18 +5,16 @@ const processCommsMessage = async (message, receiver) => {
   try {
     const { error, value: validData } = schema.validate(message.body)
     if (error) {
-      console.error('Validation error:', error.details)
-      await receiver.abandonMessage(message)
-      return
+      receiver.deadLetterMessage(message)
+      throw new Error('Validation error', error.details)
     }
     validData.dateCreated = new Date().toISOString()
-
     await db.commsEvent.create(validData)
     await receiver.completeMessage(message)
     console.log('Message processed successfully, eventId:', validData.commsMessage.id)
   } catch (err) {
     console.error('Unable to process request:', err)
-    await receiver.abandonMessage(message)
+    await receiver.deadLetterMessage(message)
   }
 }
 

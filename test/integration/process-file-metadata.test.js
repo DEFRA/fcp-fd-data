@@ -9,7 +9,7 @@ jest.mock('@azure/service-bus', () => {
     ServiceBusClient: jest.fn().mockImplementation(() => {
       return {
         createReceiver: jest.fn().mockReturnValue({
-          abandonMessage: jest.fn(),
+          deadLetterMessage: jest.fn(),
           completeMessage: jest.fn()
         })
       }
@@ -43,17 +43,17 @@ describe('processCommsMessage', () => {
     expect(savedMessage.dataValues.metadata.filename).toBe('hello-world.pdf')
     expect(receiver.completeMessage).toHaveBeenCalledWith(VALID_MESSAGE)
   })
-  test('should abandon message when internal error occurs', async () => {
+  test('should not complete message when internal error occurs', async () => {
     const internalError = new Error('Database error')
     jest.spyOn(db.fileMetadata, 'create').mockImplementation(() => {
       throw internalError
     })
     await processFileMetadata(VALID_MESSAGE, receiver)
     expect(console.error).toHaveBeenCalledWith('Unable to process request:', internalError)
-    expect(receiver.abandonMessage).toHaveBeenCalledWith(VALID_MESSAGE)
+    expect(receiver.completeMessage).not.toHaveBeenCalled()
   })
 
-  test('should abandon message when validation error occurs', async () => {
+  test('should dead letter message when validation error occurs', async () => {
     const validationError = new Error('Validation error')
     validationError.details = 'Invalid message format'
     jest.spyOn(schema, 'validate').mockImplementation(() => {
@@ -63,6 +63,6 @@ describe('processCommsMessage', () => {
     await processFileMetadata(VALID_MESSAGE, receiver)
 
     expect(console.error).toHaveBeenCalledWith('Validation error:', validationError.details)
-    expect(receiver.abandonMessage).toHaveBeenCalledWith(VALID_MESSAGE)
+    expect(receiver.deadLetterMessage).toHaveBeenCalledWith(VALID_MESSAGE)
   })
 })
