@@ -1,5 +1,5 @@
 import db from '../../../app/data/index.js'
-import validCommsMessage from '../../mocks/valid-comms-message-json-object.js'
+import validCommsMessage from '../../mocks/comms-message/valid-comms-message.js'
 import commsEventByPKQuery from './queries/comms-by-id.js'
 import registerApollo from '../../../app/server/start.js'
 import createTestCases from '../../helper-functions/create-database-entries.js'
@@ -38,8 +38,8 @@ describe('GQL get by ID', () => {
     const responseBody = JSON.parse(response.result)
     expect(responseBody.errors).toBeUndefined()
     expect(responseBody.data.commsEventByPK).toBeDefined()
-    expect(responseBody.data.commsEventByPK.commsMessage.data.sbi).toBe(987654321)
-    expect(responseBody.data.commsEventByPK.commsMessage.data.commsAddresses).toBe('test-commsAddress')
+    expect(responseBody.data.commsEventByPK.commsMessage.data.sbi).toBe(105000000)
+    expect(responseBody.data.commsEventByPK.commsMessage.data.commsAddresses).toStrictEqual(validCommsMessage.commsMessage.data.commsAddresses)
   })
   test('returns only one record when searching by id', async () => {
     const options = {

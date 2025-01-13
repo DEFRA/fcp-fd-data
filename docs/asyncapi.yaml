@@ -1,7 +1,7 @@
 asyncapi: 3.0.0
 info:
   title: Single Front Door Data Service
-  version: 1.0.0
+  version: 1.1.0
   description: Data layer for the Single Front Door service
 
 channels:
@@ -12,6 +12,8 @@ channels:
     messages:
       commsEvent:
         $ref: '#/components/messages/commsEvent'
+      fileMetadata:
+        $ref: '#/components/messages/fileMetadata'
 
 operations:
   fcp-fd-data.subscribe:
@@ -25,6 +27,11 @@ components:
       contentType: application/json
       payload:
         $ref: '#/components/schemas/commsEventSchema'
+    fileMetadata:
+      name: metadata for uploaded files 
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/fileMetadataSchema'
   schemas:
     commsEventSchema:
       type: object
@@ -37,12 +44,43 @@ components:
         commsMessage:
           $ref: '#/components/schemas/commsMessage'
       additionalProperties: false
+    
+    fileMetadataSchema:
+      type: object
+      required:
+        - id
+        - metadata
+      properties:
+        id:
+          $ref: '#/components/schemas/id'
+        metadata:
+          $ref: '#/components/schemas/metadata'
+      additionalProperties: false
 
     commsMessage:
+        type: object
+        description: metadata for uploaded files in in Cloud Events format
+        example:
+            id: "123e4567-e89b-12d3-a456-426655440000"
+            source: "/mycontext"
+            type: "com.example.someevent"
+            specversion: "1.0"
+            datacontenttype: "application/json"
+            data:
+              placeholder: "data goes here"
+
+    metadata:
       type: object
-      description: event relating to a specific user communications message in Cloud Events format
+      description: metadata for uploaded files in in Cloud Events format
       example:
-        event: event-goes-here
+          id: "123e4567-e89b-12d3-a456-426655440000"
+          source: "/mycontext"
+          type: "com.example.someevent"
+          specversion: "1.0"
+          datacontenttype: "application/json"
+          data:
+            placeholder: "data goes here"
+
     id:
       type: string
       format: uuid
@@ -50,5 +88,6 @@ components:
       example: 123e4567-e89b-12d3-a456-426655440000
       minlength: 1
       uniqueItems: true
+    
 
       

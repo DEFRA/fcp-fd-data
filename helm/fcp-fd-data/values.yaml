@@ -26,8 +26,8 @@ container:
   resourceTier: M
   port: *port
   messageQueueHost: namespace.servicebus.windows.net
-  commsSubscriptionAddress: fcp-fd-data
-  commsTopicAddress: fcp-fd-data
+  dataSubscriptionAddress: fcp-fd-data
+  dataTopicAddress: fcp-fd-data
 
 livenessProbe:
   path: /healthz
