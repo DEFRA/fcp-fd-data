@@ -1,8 +1,16 @@
 import metadata from './metadata.js'
+
+const VALID_METADATA = {
+  id: '550e8400-e29b-41d4-a716-446655440001',
+  metadata
+}
+
 const VALID_MESSAGE = {
   body: {
-    id: '550e8400-e29b-41d4-a716-446655440001',
-    metadata
+    ...VALID_METADATA
   }
 }
-export default VALID_MESSAGE
+export {
+  VALID_METADATA,
+  VALID_MESSAGE
+}
