@@ -35,11 +35,17 @@ describe('Query by file metadata', () => {
       })
     }
     const response = await server.inject(options)
+    // console.log('Response:', response)
 
     const responseBody = JSON.parse(response.result)
+    // console.log('Response Body:', responseBody)
+
     expect(responseBody.errors).toBeUndefined()
-    // expect(responseBody.data.commsEventByPK).toBeDefined()
-    // expect(responseBody.data.commsEventByPK.commsMessage.data.sbi).toBe(105000000)
+    expect(responseBody.data.getMetadata).toBeDefined()
+    console.log('Metadata:', responseBody.data.getMetadata)
+    expect(responseBody.data.getMetadata.data.sbi).toBe(123456789)
+
+    // expect(responseBody.data.getMetadata[0].metadata.data.sbi).toBe(123456789)
     // expect(responseBody.data.commsEventByPK.commsMessage.data.commsAddresses).toStrictEqual(validCommsMessage.commsMessage.data.commsAddresses)
   })
 })
