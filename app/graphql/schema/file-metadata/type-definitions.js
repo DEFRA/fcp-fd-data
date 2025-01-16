@@ -35,6 +35,16 @@ type metadata {
   """ Blob Reference """
   blobReference: String
 }
+
+""" Enumeration for file metadata """
+enum fileMetadataEnum {
+
+  """ Single Business Identifier """
+  SBI
+
+  """ Blob reference """
+  BLOB_REFERENCE
+}
 `
 
 export default typeDefinitions

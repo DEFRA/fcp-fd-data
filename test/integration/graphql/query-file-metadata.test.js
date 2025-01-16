@@ -16,6 +16,7 @@ describe('Query by file metadata', () => {
   afterAll(async () => {
     await db.sequelize.truncate({ cascade: true })
     await db.sequelize.close()
+    await server.stop()
   })
 
   test('fetches metadata by SBI', async () => {
@@ -28,7 +29,8 @@ describe('Query by file metadata', () => {
       payload: JSON.stringify({
         ...getMetadata,
         variables: {
-          SBI: '123456789'
+          key: 'SBI',
+          value: '123456789'
         }
       })
     }
