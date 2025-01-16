@@ -12,8 +12,8 @@ const processInboundMessage = async (message, receiver) => {
         await processFileMetadata(message, receiver)
         break
       default:
+        console.warn('Invalid message type', message.body)
         await receiver.deadLetterMessage(message)
-        throw new Error('Invalid message type')
     }
   } catch (err) {
     console.error('Error processing request:', err)
