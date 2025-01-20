@@ -52,7 +52,7 @@ type metadataDetails {
 """ Data structure for metadata content """
 type metadata {
   """ Single Business Identifier """
-  sbi: Int
+  sbi: String
 
   """ Blob Reference """
   blobReference: String
