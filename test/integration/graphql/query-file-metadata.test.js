@@ -8,7 +8,8 @@ describe('Query by file metadata', () => {
   let server
 
   beforeAll(async () => {
-    await createTestCases(VALID_METADATA, db.fileMetadata, { }, 1)
+    await createTestCases(VALID_METADATA, db.fileMetadata, { 'metadata.data.sbi': '123456789' }, 1)
+    await createTestCases(VALID_METADATA, db.fileMetadata, { 'metadata.data.sbi': '987654321' }, 1)
     server = await registerApollo()
     await server.start()
   })
@@ -38,9 +39,6 @@ describe('Query by file metadata', () => {
     const responseBody = JSON.parse(response.result).data.getMetadata
     const { id, ...expectedMetadata } = VALID_METADATA
 
-    console.log('expectedMetadata:::', expectedMetadata)
-    console.log('responseBody:::', responseBody[0])
-
     expect(responseBody.errors).toBeUndefined()
     expect(Array.isArray(responseBody)).toBe(true)
     expect(responseBody[0].metadata.data.sbi).toBe('123456789')
@@ -66,8 +64,6 @@ describe('Query by file metadata', () => {
     const responseBody = JSON.parse(response.result).data.getMetadata
     const { id, ...expectedMetadata } = VALID_METADATA
 
-    console.log(responseBody[0])
-
     expect(responseBody.errors).toBeUndefined()
     expect(Array.isArray(responseBody)).toBe(true)
     expect(responseBody[0].metadata.data.blobReference).toBe('550e8400-e29b-41d4-a716-446655440000')
@@ -89,12 +85,26 @@ describe('Query by file metadata', () => {
         }
       })
     }
+
+    // console.log('Request payload:', JSON.stringify(options.payload, null, 2))
+
     const response = await server.inject(options)
+
+    // console.log('Response:', response.result)
+
     const responseBody = JSON.parse(response.result)
 
+    // console.log('Raw response:', response.result)
+
+    // console.log(responseBody.data.getMetadata[0])
+    // console.log(responseBody.data.getMetadata[1])
+
+    // console.log('Full response structure:', JSON.stringify(responseBody, null, 2))
+
     expect(responseBody.errors).toBeUndefined()
-    // expect(responseBody.data.getMetadata).toBeDefined()
-  //   // expect(responseBody.data.getMetadata[0].metadata.data.sbi).toBe(123456789)
-  //   // expect(responseBody.data.getMetadata.length).toBe(1)
+    expect(responseBody.data.getMetadata).toBeDefined()
+    expect(responseBody.data.getMetadata[0].metadata.data.sbi).toBe('123456789')
+    expect(responseBody.data.getMetadata[1].metadata.data.sbi).toBe('987654321')
+    expect(responseBody.data.getMetadata.length).toBe(2)
   })
 })

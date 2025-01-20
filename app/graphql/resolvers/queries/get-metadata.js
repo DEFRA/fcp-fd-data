@@ -1,12 +1,18 @@
 import db from '../../../data/index.js'
 import enumMap from '../../schema/file-metadata/enum-map.js'
+import { Op } from 'sequelize'
 
 const getMetadata = async (_, { key, value }) => {
   const mappedKey = enumMap[key]
-  value = value.toString()
+
+  const values = Array.isArray(value) ? value.map(String) : [String(value)]
 
   const response = await db.fileMetadata.findAll({
-    where: { [`metadata.${mappedKey}`]: value }
+    where: {
+      [`metadata.${mappedKey}`]: {
+        [Op.in]: values
+      }
+    }
   })
 
   const mappedResponse = response.map((element) => {
