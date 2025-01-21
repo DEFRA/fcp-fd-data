@@ -47,13 +47,12 @@ readinessProbe:
 
 postgresService:
   postgresDb: fcp_fd_data
-  postgresExternalName:
   postgresqlHost: fcp-fd-data-postgres
   postgresPort: 5432
   postgresSchema: public
   postgresUser: postgres
 
-usePodIdentity: true
+workloadIdentity: true
 
 azureIdentity:
   resourceID: not-a-real-clientID
