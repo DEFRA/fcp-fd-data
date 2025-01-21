@@ -20,18 +20,20 @@ operations:
     action: receive
     channel:
       $ref: '#/channels/fcp-fd-data'
+
 components:
   messages:
     commsEvent:
-      name: event data for user communications
+      name: Event data for User communications
       contentType: application/json
       payload:
         $ref: '#/components/schemas/commsEventSchema'
     fileMetadata:
-      name: metadata for uploaded files 
+      name: Metadata for Uploaded files 
       contentType: application/json
       payload:
         $ref: '#/components/schemas/fileMetadataSchema'
+        
   schemas:
     commsEventSchema:
       type: object
@@ -59,9 +61,9 @@ components:
 
     commsMessage:
         type: object
-        description: metadata for uploaded files in in Cloud Events format
+        description: Metadata for communication events in Cloud Events format
         example:
-            id: "123e4567-e89b-12d3-a456-426655440000"
+            id: "123e4567-e89b-42d3-a456-426655440000"
             source: "/mycontext"
             type: "com.example.someevent"
             specversion: "1.0"
@@ -71,15 +73,16 @@ components:
 
     metadata:
       type: object
-      description: metadata for uploaded files in in Cloud Events format
+      description: Metadata for uploaded files in Cloud Events format
       example:
-          id: "123e4567-e89b-12d3-a456-426655440000"
+          id: "123e4567-e89b-42d3-a456-426655440000"
           source: "/mycontext"
           type: "com.example.someevent"
           specversion: "1.0"
           datacontenttype: "application/json"
           data:
-            placeholder: "data goes here"
+            sbi: "1234567890"
+            blobReference: "626901e1-eadc-46ef-8d63-71d87b704484"
 
     id:
       type: string
