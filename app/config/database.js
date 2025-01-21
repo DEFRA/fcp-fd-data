@@ -9,10 +9,12 @@ const hooks = {
   beforeConnect: async (config) => {
     if (isProd()) {
       const credential = new DefaultAzureCredential({ managedIdentityClientId: process.env.AZURE_CLIENT_ID })
+
       const tokenProvider = getBearerTokenProvider(
         credential,
         'https://ossrdbms-aad.database.windows.net/.default'
       )
+
       config.password = tokenProvider
     }
   }
