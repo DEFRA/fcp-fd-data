@@ -1,15 +1,19 @@
 import { expect, jest } from '@jest/globals'
 const configPath = '../../app/config/database.js'
 
+const mockGetBearerTokenProvider = jest.fn()
+
 jest.mock('@azure/identity', () => {
   return {
     DefaultAzureCredential: jest.fn().mockImplementation(() => {
       return {
         getToken: jest.fn().mockResolvedValue({ token: 'mocked-access-token' })
       }
-    })
+    }),
+    getBearerTokenProvider: mockGetBearerTokenProvider
   }
 })
+
 describe('Database Configuration', () => {
   beforeEach(() => {
     jest.resetModules()
@@ -29,7 +33,7 @@ describe('Database Configuration', () => {
     process.env.NODE_ENV = 'production'
     const config = await import(configPath)
     await config.default.hooks.beforeConnect(config.default)
-    expect(config.default.password).toBe('mocked-access-token')
+    expect(mockGetBearerTokenProvider).toHaveBeenCalled()
   })
 
   test('should update config.database when env is undefined "', async () => {

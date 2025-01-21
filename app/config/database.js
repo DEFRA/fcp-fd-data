@@ -1,4 +1,4 @@
-import { DefaultAzureCredential } from '@azure/identity'
+import { DefaultAzureCredential, getBearerTokenProvider } from '@azure/identity'
 import { PRODUCTION } from '../constants/environments.js'
 
 const isProd = () => {
@@ -6,11 +6,16 @@ const isProd = () => {
 }
 
 const hooks = {
-  beforeConnect: async (dbConfig) => {
+  beforeConnect: async (config) => {
     if (isProd()) {
-      const credential = new DefaultAzureCredential()
-      const accessToken = await credential.getToken('https://ossrdbms-aad.database.windows.net')
-      dbConfig.password = accessToken.token
+      const credential = new DefaultAzureCredential({ managedIdentityClientId: process.env.AZURE_CLIENT_ID })
+
+      const tokenProvider = getBearerTokenProvider(
+        credential,
+        'https://ossrdbms-aad.database.windows.net/.default'
+      )
+
+      config.password = tokenProvider
     }
   }
 }
@@ -24,7 +29,7 @@ const retry = {
   timeout: 60000
 }
 
-const config = {
+const database = {
   database: process.env.POSTGRES_DB || 'fcp_fd_data',
   dialect: 'postgres',
   dialectOptions: {
@@ -40,4 +45,4 @@ const config = {
   username: process.env.POSTGRES_USERNAME
 }
 
-export default config
+export default database
