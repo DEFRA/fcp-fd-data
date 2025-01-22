@@ -16,6 +16,37 @@ type Query {
   GET comms events filtered by a specific property and value
   """
   commsEventByProperty(key: commsEnum!, value: StringOrArray!): [CommsEvent]
+
+   """
+  GET comms events filtered by a specific property and value
+  Supports cursor-based pagination
+  """
+  commsEventByPaginatedProperty(key: commsEnum!, value: StringOrArray!, first: Int, after: String, last: Int, before: String): CommsEventConnection
+}
+
+"""
+Connection type for paginated comms events
+"""
+type CommsEventConnection {
+  Node: [CommsEventEdge!]!
+  pageInfo: PageInfo!
+}
+
+"""
+Batch type returning a comms event and its cursor
+"""
+type CommsEventEdge {
+  batchOf: CommsEvent!
+  cursor: String!
+}
+
+"""
+Information about pagination state
+"""
+type PageInfo {
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  endCursor: String
 }
 
 """ Comms event received from the upstream comms service """
