@@ -7,7 +7,7 @@ const getMetadata = async (_, { key, value }) => {
 
   const values = Array.isArray(value) ? value.map(String) : [String(value)]
 
-  const response = await db.fileMetadata.findAll({
+  const metadataRecords = await db.fileMetadata.findAll({
     where: {
       [`metadata.${mappedKey}`]: {
         [Op.in]: values
@@ -15,20 +15,20 @@ const getMetadata = async (_, { key, value }) => {
     }
   })
 
-  return response.map(element => ({
-    id: element.dataValues.id,
-    dateCreated: element.dataValues.dataCreated,
+  return metadataRecords.map(record => ({
+    id: record.dataValues.id,
+    dateCreated: record.dataValues.dataCreated,
     metadata: {
-      id: element.dataValues.metadata.id,
+      id: record.dataValues.metadata.id,
       data: {
-        sbi: element.dataValues.metadata.data.sbi,
-        blobReference: element.dataValues.metadata.data.blobReference
+        sbi: record.dataValues.metadata.data.sbi,
+        blobReference: record.dataValues.metadata.data.blobReference
       },
-      time: element.dataValues.metadata.time,
-      type: element.dataValues.metadata.type,
-      source: element.dataValues.metadata.source,
-      specversion: element.dataValues.metadata.specversion,
-      datacontenttype: element.dataValues.metadata.datacontenttype
+      time: record.dataValues.metadata.time,
+      type: record.dataValues.metadata.type,
+      source: record.dataValues.metadata.source,
+      specversion: record.dataValues.metadata.specversion,
+      datacontenttype: record.dataValues.metadata.datacontenttype
     }
   }))
 }
