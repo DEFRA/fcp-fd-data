@@ -21,7 +21,7 @@ type FileMetadata {
   """ Date and time when metadata has been saved in fd-data database """
   dateCreated: Timestamp
 
-  """ Details of the metadata """
+  """ Metadata message in cloudevents format """
   metadata: metadataDetails
 }
 
@@ -33,16 +33,16 @@ type metadataDetails {
   """ Structured business data related to the metadata """
   data: metadata
 
-  """ Time of the metadata """
+  """ Time metadata event was sent """
   time: Timestamp
 
-  """ Type of the metadata """
+  """ Type of metadata event in reverse dns format """
   type: String
 
-  """ Source system of the metadata """
+  """ Service that generated the event """
   source: String
 
-  """ Specification version of the metadata (Cloud Events format) """
+  """ Specification version of the metadata (cloudevents format) """
   specversion: String
 
   """ Content type of the metadata data """
@@ -54,7 +54,7 @@ type metadata {
   """ Single Business Identifier """
   sbi: String
 
-  """ Blob Reference """
+  """ Unique reference for the blob """
   blobReference: String
 }
 
@@ -63,7 +63,7 @@ enum fileMetadataEnum {
   """ Single Business Identifier """
   SBI
 
-  """ Blob Reference """
+  """ Unique reference for the blob """
   BLOB_REFERENCE
 }
 `
