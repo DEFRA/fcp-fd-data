@@ -17,7 +17,7 @@ const getMetadata = async (_, { key, value }) => {
 
   return metadataRecords.map(record => ({
     id: record.dataValues.id,
-    dateCreated: record.dataValues.dataCreated,
+    dateCreated: record.dataValues.dateCreated,
     metadata: {
       id: record.dataValues.metadata.id,
       data: {
