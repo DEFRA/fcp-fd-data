@@ -1,8 +1,8 @@
-import db from '../../../app/data/index.js'
-import validCommsMessage from '../../mocks/comms-message/valid-comms-message.js'
-import commsEventByPropertyQuery from './queries/comms-by-property.js'
-import registerApollo from '../../../app/server/start.js'
-import createTestCases from '../../helper-functions/create-database-entries.js'
+import db from '../../../../app/data/index.js'
+import validCommsMessage from '../../../mocks/comms-message/valid-comms-message.js'
+import commsEventByPropertyQuery from '../queries/comms-by-property.js'
+import registerApollo from '../../../../app/server/start.js'
+import createTestCases from '../../../helper-functions/create-database-entries.js'
 
 describe('GQL queries', () => {
   let server
@@ -184,6 +184,7 @@ describe('GQL queries', () => {
     }
     const response = await server.inject(options)
     const responseBody = JSON.parse(response.result)
+
     expect(responseBody.errors).toBeUndefined()
     expect(responseBody.data.commsEventByProperty[0].commsMessage.data.commsAddresses).toStrictEqual(['commsAddress1', 'commsAddress2'])
     expect(responseBody.data.commsEventByProperty[1].commsMessage.data.commsAddresses).toStrictEqual('commsAddress1')

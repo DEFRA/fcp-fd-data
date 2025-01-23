@@ -1,4 +1,4 @@
-import getCommsEventByProperty from '../../../../app/graphql/resolvers/queries/get-comms-event-by-property'
+import getCommsEventByProperty from '../../../../app/graphql/resolvers/comms-message/get-comms-event-by-property.js'
 import db from '../../../../app/data/index.js'
 import { jest } from '@jest/globals'
 

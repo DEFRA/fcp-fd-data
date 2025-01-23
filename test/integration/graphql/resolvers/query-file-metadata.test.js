@@ -1,8 +1,8 @@
-import db from '../../../app/data/index.js'
-import { VALID_METADATA } from '../../mocks/file-metadata/valid.js'
-import getMetadata from './queries/get-metadata.js'
-import registerApollo from '../../../app/server/start.js'
-import createTestCases from '../../helper-functions/create-database-entries.js'
+import db from '../../../../app/data/index.js'
+import { VALID_METADATA } from '../../../mocks/file-metadata/valid.js'
+import getMetadata from '../queries/get-metadata.js'
+import registerApollo from '../../../../app/server/start.js'
+import createTestCases from '../../../helper-functions/create-database-entries.js'
 
 describe('Query by file metadata', () => {
   let server
