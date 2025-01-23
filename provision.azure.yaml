@@ -3,5 +3,7 @@ resources:
   topics:
     - name: fcp-fd-data
       role: receiver
+      subscriptions:
+        - name: fcp-fd-data
   postgreSql:
     name: fcp-fd-data
