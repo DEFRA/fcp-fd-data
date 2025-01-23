@@ -4,6 +4,7 @@ const MESSAGE_CONTENT = {
   type: 'com.example.someevent',
   specversion: '1.0',
   datacontenttype: 'application/json',
+  time: '2025-01-18T12:34:56Z',
   data: {
     sbi: '123456789',
     blobReference: '550e8400-e29b-41d4-a716-446655440000'
