@@ -1,3 +1,9 @@
 resources:
+  identity: fd-data
   topics:
-    - name: data
+    - name: fcp-fd-data
+      role: receiver
+      subscriptions:
+        - name: fcp-fd-data
+  postgreSql:
+    name: fcp-fd-data
