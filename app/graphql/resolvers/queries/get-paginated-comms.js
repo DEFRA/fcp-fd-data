@@ -20,6 +20,9 @@ const getCommsEventByPaginatedProperty = async (_, { key, value, first, after, l
     limit = last
     direction = 'DESC' // Descending for "last" pagination
   }
+  if (first) {
+    limit = first
+  }
 
   // Decode cursors (if provided)
   const startCursor = after ? decodeCursor(after) : null
@@ -62,7 +65,7 @@ const getCommsEventByPaginatedProperty = async (_, { key, value, first, after, l
   if (last) {
     options = {
       where: whereConditions,
-      limit: 2,
+      limit,
       order: [['id', 'DESC']] // Fetch the last 2 records
     }
   }
