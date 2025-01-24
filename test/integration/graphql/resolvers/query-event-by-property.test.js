@@ -12,6 +12,8 @@ describe('GQL queries', () => {
     await createTestCases(validCommsMessage, db.commsEvent, { 'commsMessage.data.sourceSystem': 'newsourceSystem', 'commsMessage.data.crn': 223456789, 'commsMessage.data.commsAddresses': 'test-commsAddress' }, 1)
     await createTestCases(validCommsMessage, db.commsEvent, { 'commsMessage.data.sourceSystem': 'newsourceSystem', 'commsMessage.data.crn': 223456790, 'commsMessage.data.commsAddresses': ['commsAddress1', 'commsAddress2'] }, 1)
     await createTestCases(validCommsMessage, db.commsEvent, { 'commsMessage.data.sourceSystem': 'newsourceSystem', 'commsMessage.data.commsAddresses': 'commsAddress1' }, 2)
+    await createTestCases(validCommsMessage, db.commsEvent, { 'commsMessage.data.sourceSystem': 'newsourceSystem', 'commsMessage.data.reference': 'ffc-ahwr-example-reference' }, 1)
+    await createTestCases(validCommsMessage, db.commsEvent, { 'commsMessage.data.sourceSystem': 'newsourceSystem', 'commsMessage.data.reference': 'ffc-ahwr-another-example-reference' }, 1)
     server = await registerApollo()
     await server.start()
   })
@@ -92,7 +94,7 @@ describe('GQL queries', () => {
 
     expect(responseBody.errors).toBeUndefined()
     expect(responseBody.data.commsEventByProperty).toBeDefined()
-    expect(responseBody.data.commsEventByProperty.length).toBe(6)
+    expect(responseBody.data.commsEventByProperty.length).toBe(7)
     expect(responseBody.data.commsEventByProperty[0].commsMessage.data.crn).toBe(1234567890)
     expect(responseBody.data.commsEventByProperty[1].commsMessage.data.crn).toBe(1234567890)
     expect(responseBody.data.commsEventByProperty[2].commsMessage.data.crn).toBe(223456789)
@@ -160,7 +162,7 @@ describe('GQL queries', () => {
     const response = await server.inject(options)
     const responseBody = JSON.parse(response.result)
     expect(responseBody.errors).toBeUndefined()
-    expect(responseBody.data.commsEventByProperty.length).toBe(4)
+    expect(responseBody.data.commsEventByProperty.length).toBe(6)
     expect(responseBody.data.commsEventByProperty[0].commsMessage.data.crn).toBe(223456789)
     expect(responseBody.data.commsEventByProperty[0].commsMessage.data.commsAddresses).toStrictEqual('test-commsAddress')
     expect(responseBody.data.commsEventByProperty[1].commsMessage.data.crn).toBe(223456790)
@@ -190,5 +192,55 @@ describe('GQL queries', () => {
     expect(responseBody.data.commsEventByProperty[1].commsMessage.data.commsAddresses).toStrictEqual('commsAddress1')
     expect(responseBody.data.commsEventByProperty[2].commsMessage.data.commsAddresses).toStrictEqual('commsAddress1')
     expect(responseBody.data.commsEventByProperty.length).toBe(3)
+  })
+
+  test('returns all commsEvents with corresponding reference', async () => {
+    const options = {
+      method: 'POST',
+      url: '/graphql',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      payload: JSON.stringify({
+        ...commsEventByPropertyQuery,
+        variables: {
+          key: 'REFERENCE',
+          value: 'ffc-ahwr-example-reference'
+        }
+      })
+    }
+    const response = await server.inject(options)
+    const responseBody = JSON.parse(response.result)
+
+    expect(responseBody.errors).toBeUndefined()
+    expect(responseBody.data.commsEventByProperty).toBeDefined()
+    expect(responseBody.data.commsEventByProperty.length).toBe(7)
+    expect(responseBody.data.commsEventByProperty[0].commsMessage.data.reference).toBe('ffc-ahwr-example-reference')
+    expect(responseBody.data.commsEventByProperty[1].commsMessage.data.reference).toBe('ffc-ahwr-example-reference')
+  })
+
+  test('returns all commsEvents by reference array', async () => {
+    const options = {
+      method: 'POST',
+      url: '/graphql',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      payload: JSON.stringify({
+        ...commsEventByPropertyQuery,
+        variables: {
+          key: 'REFERENCE',
+          value: ['ffc-ahwr-example-reference', 'ffc-ahwr-another-example-reference']
+        }
+      })
+    }
+    const response = await server.inject(options)
+    const responseBody = JSON.parse(response.result)
+
+    expect(responseBody.errors).toBeUndefined()
+    expect(responseBody.data.commsEventByProperty).toBeDefined()
+    expect(responseBody.data.commsEventByProperty[0].commsMessage.data.reference).toBe('ffc-ahwr-example-reference')
+    expect(responseBody.data.commsEventByProperty[7].commsMessage.data.reference).toBe('ffc-ahwr-another-example-reference')
+    expect(responseBody.data.commsEventByProperty.length).toBe(8)
   })
 })
