@@ -1,7 +1,7 @@
 import processFileMetadata from '../../app/messaging/messages/process-file-metadata.js'
 import db from '../../app/data/index'
 import { jest } from '@jest/globals'
-import VALID_MESSAGE from '../mocks/file-metadata/valid.js'
+import { MESSAGE_CONTENT, VALID_MESSAGE } from '../mocks/file-metadata/valid.js'
 import schema from '../../app/messaging/schemas/file-metadata/schema.js'
 
 jest.mock('@azure/service-bus', () => {
@@ -40,7 +40,7 @@ describe('processCommsMessage', () => {
     await processFileMetadata(VALID_MESSAGE, receiver)
     const savedMessage = await db.fileMetadata.findByPk(VALID_MESSAGE.body.id)
     expect(savedMessage).not.toBeNull()
-    expect(savedMessage.dataValues.metadata.filename).toBe('hello-world.pdf')
+    expect(savedMessage.dataValues.metadata).toStrictEqual(MESSAGE_CONTENT)
     expect(receiver.completeMessage).toHaveBeenCalledWith(VALID_MESSAGE)
   })
   test('should not complete message when internal error occurs', async () => {

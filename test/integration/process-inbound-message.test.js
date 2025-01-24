@@ -3,7 +3,7 @@ import { beforeEach, jest } from '@jest/globals'
 import processInboundMessage from '../../app/messaging/process-inbound-message'
 import db from '../../app/data/index'
 import { commsMessage } from '../mocks/comms-message/comms-message.js'
-import validFileMetadata from '../mocks/file-metadata/valid.js'
+import { VALID_MESSAGE } from '../mocks/file-metadata/valid.js'
 
 const id = 'a058de5b-42ad-473c-91e7-0797a43fda30'
 
@@ -60,9 +60,9 @@ describe('inbound message tests', () => {
   })
 
   test('Should create a fileMetadata record in metadata table when type is FILE_METADATA', async () => {
-    await processInboundMessage(validFileMetadata, mockReceiver)
-    const savedMessage = await db.fileMetadata.findByPk(validFileMetadata.body.id)
-    expect(savedMessage.metadata).toStrictEqual(validFileMetadata.body.metadata)
-    expect(savedMessage.id).toBe(validFileMetadata.body.id)
+    await processInboundMessage(VALID_MESSAGE, mockReceiver)
+    const savedMessage = await db.fileMetadata.findByPk(VALID_MESSAGE.body.id)
+    expect(savedMessage.metadata).toStrictEqual(VALID_MESSAGE.body.metadata)
+    expect(savedMessage.id).toBe(VALID_MESSAGE.body.id)
   })
 })

@@ -1,4 +1,4 @@
-const commsEnumMap = {
+const enumMap = {
   ID: 'id',
   TIME: 'time',
   TYPE: 'type',
@@ -17,4 +17,4 @@ const commsEnumMap = {
   NOTIFY_TEMPLATE_ID: 'data.notifyTemplateId'
 }
 
-export default commsEnumMap
+export default enumMap

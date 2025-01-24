@@ -1,5 +1,5 @@
-import commsEnumMap from '../../../../app/graphql/schema/comms-message/comms-enum-map.js'
-import getCommsEventByProperty from '../../../../app/graphql/resolvers/queries/get-comms-event-by-property.js'
+import enumMap from '../../../../app/graphql/schema/comms-message/enum-map.js'
+import getCommsEventByProperty from '../../../../app/graphql/resolvers/comms-message/get-comms-event-by-property.js'
 import db from '../../../../app/data/index.js'
 import { expect } from '@jest/globals'
 import validJSONCommsMessage from '../../../mocks/comms-message/valid-comms-message.js'
@@ -13,7 +13,7 @@ describe('commsByProperty', () => {
     await db.commsEvent.destroy({ where: {} })
   })
 
-  test.each(Object.entries(commsEnumMap))('should map key %s to %s and query the database', async (key, mappedKey) => {
+  test.each(Object.entries(enumMap))('should map key %s to %s and query the database', async (key, mappedKey) => {
     const value = 'testValue'
     const results = await getCommsEventByProperty(null, { key, value })
     expect(results).toBeDefined()

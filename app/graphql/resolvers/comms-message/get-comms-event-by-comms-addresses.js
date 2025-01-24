@@ -1,5 +1,5 @@
-import { Op } from 'sequelize'
 import db from '../../../data/index.js'
+import { Op } from 'sequelize'
 
 const getCommsEventByCommsAddresses = async (mappedKey, value) => {
   return db.commsEvent.findAll({

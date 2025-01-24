@@ -1,8 +1,8 @@
-import db from '../../../app/data/index.js'
-import validCommsMessage from '../../mocks/comms-message/valid-comms-message.js'
-import commsEventByPKQuery from './queries/comms-by-id.js'
-import registerApollo from '../../../app/server/start.js'
-import createTestCases from '../../helper-functions/create-database-entries.js'
+import db from '../../../../app/data/index.js'
+import validCommsMessage from '../../../mocks/comms-message/valid-comms-message.js'
+import commsEventByPKQuery from '../queries/comms-by-id.js'
+import registerApollo from '../../../../app/server/start.js'
+import createTestCases from '../../../helper-functions/create-database-entries.js'
 
 describe('GQL get by ID', () => {
   let server
@@ -17,6 +17,7 @@ describe('GQL get by ID', () => {
   afterAll(async () => {
     await db.sequelize.truncate({ cascade: true })
     await db.sequelize.close()
+    await server.stop()
   })
 
   test('fetches commsEvent by id', async () => {

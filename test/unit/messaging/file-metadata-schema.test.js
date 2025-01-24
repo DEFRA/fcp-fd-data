@@ -1,4 +1,4 @@
-import VALID_MESSAGE from '../../mocks/file-metadata/valid.js'
+import { VALID_MESSAGE } from '../../mocks/file-metadata/valid.js'
 import schema from '../../../app/messaging/schemas/file-metadata/schema.js'
 const INVALID_MESSAGE = VALID_MESSAGE
 

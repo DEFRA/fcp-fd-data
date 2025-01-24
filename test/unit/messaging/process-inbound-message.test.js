@@ -1,17 +1,16 @@
 import { jest } from '@jest/globals'
-import { COMMS_EVENT, FILE_METADATA } from '../../../app/constants/message-types'
+import { COMMS_EVENT, FILE_METADATA } from '../../../app/constants/message-types.js'
 
 jest.unstable_mockModule('../../../app/messaging/messages/process-comms-message.js', () => ({
   default: jest.fn()
 }))
-jest.unstable_mockModule('../../../app/messaging/messages/process-file-metadata', () => ({
+jest.unstable_mockModule('../../../app/messaging/messages/process-file-metadata.js', () => ({
   default: jest.fn()
 }))
 
-const processFileMetadata = (await import('../../../app/messaging/messages/process-file-metadata')).default
-const processCommsMessage = (await import('../../../app/messaging/messages/process-comms-message')).default
-const processInboundMessage = (await import('../../../app/messaging/process-inbound-message')).default
-const id = 'a058de5b-42ad-473c-91e7-0797a43fda33'
+const processCommsMessage = (await import('../../../app/messaging/messages/process-comms-message.js')).default
+const processFileMetadata = (await import('../../../app/messaging/messages/process-file-metadata.js')).default
+const processInboundMessage = (await import('../../../app/messaging/process-inbound-message.js')).default
 
 describe('processInboundMessage', () => {
   let mockReceiver
@@ -22,16 +21,12 @@ describe('processInboundMessage', () => {
       completeMessage: jest.fn(),
       abandonMessage: jest.fn()
     }
-  })
-
-  afterEach(() => {
     jest.clearAllMocks()
   })
 
   test('should process commsMessage correctly', async () => {
     const message = {
       body: {
-        id,
         [COMMS_EVENT]: {}
       }
     }
@@ -41,12 +36,12 @@ describe('processInboundMessage', () => {
     expect(processCommsMessage).toHaveBeenCalledWith(message, mockReceiver)
     expect(processFileMetadata).not.toHaveBeenCalled()
     expect(mockReceiver.deadLetterMessage).not.toHaveBeenCalled()
+    expect(mockReceiver.abandonMessage).not.toHaveBeenCalled()
   })
 
   test('should process fileMetadata correctly', async () => {
     const message = {
       body: {
-        id,
         [FILE_METADATA]: {}
       }
     }
@@ -56,12 +51,12 @@ describe('processInboundMessage', () => {
     expect(processFileMetadata).toHaveBeenCalledWith(message, mockReceiver)
     expect(processCommsMessage).not.toHaveBeenCalled()
     expect(mockReceiver.deadLetterMessage).not.toHaveBeenCalled()
+    expect(mockReceiver.abandonMessage).not.toHaveBeenCalled()
   })
 
-  test('should abandon message for invalid message type', async () => {
+  test('should dead-letter message for invalid message type', async () => {
     const message = {
       body: {
-        id,
         invalidType: {}
       }
     }
@@ -70,6 +65,26 @@ describe('processInboundMessage', () => {
 
     expect(processCommsMessage).not.toHaveBeenCalled()
     expect(processFileMetadata).not.toHaveBeenCalled()
+    expect(mockReceiver.deadLetterMessage).toHaveBeenCalledWith(message)
+    expect(mockReceiver.abandonMessage).not.toHaveBeenCalled()
+  })
+
+  test('should abandon message on error', async () => {
+    const message = {
+      body: {
+        [COMMS_EVENT]: {}
+      }
+    }
+
+    processCommsMessage.mockImplementation(() => {
+      throw new Error('Test error')
+    })
+
+    await processInboundMessage(message, mockReceiver)
+
+    expect(processCommsMessage).toHaveBeenCalledWith(message, mockReceiver)
+    expect(processFileMetadata).not.toHaveBeenCalled()
+    expect(mockReceiver.deadLetterMessage).not.toHaveBeenCalled()
     expect(mockReceiver.abandonMessage).toHaveBeenCalledWith(message)
   })
 })
