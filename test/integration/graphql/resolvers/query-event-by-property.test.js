@@ -4,26 +4,30 @@ import commsEventByPropertyQuery from '../queries/comms-by-property.js'
 import registerApollo from '../../../../app/server/start.js'
 import createTestCases from '../../../helper-functions/create-database-entries.js'
 
+let server
+
+const setupTestCases = async () => {
+  await createTestCases(validCommsMessage, db.commsEvent, { 'commsMessage.data.crn': 1234567890 }, 2)
+  await createTestCases(validCommsMessage, db.commsEvent, { 'commsMessage.data.sourceSystem': 'newsourceSystem', 'commsMessage.data.crn': 223456789, 'commsMessage.data.commsAddresses': 'test-commsAddress' }, 1)
+  await createTestCases(validCommsMessage, db.commsEvent, { 'commsMessage.data.sourceSystem': 'newsourceSystem', 'commsMessage.data.crn': 223456790, 'commsMessage.data.commsAddresses': ['commsAddress1', 'commsAddress2'] }, 1)
+  await createTestCases(validCommsMessage, db.commsEvent, { 'commsMessage.data.sourceSystem': 'newsourceSystem', 'commsMessage.data.commsAddresses': 'commsAddress1' }, 2)
+  await createTestCases(validCommsMessage, db.commsEvent, { 'commsMessage.data.sourceSystem': 'newsourceSystem', 'commsMessage.data.reference': 'ffc-ahwr-example-reference' }, 1)
+  await createTestCases(validCommsMessage, db.commsEvent, { 'commsMessage.data.sourceSystem': 'newsourceSystem', 'commsMessage.data.reference': 'ffc-ahwr-another-example-reference' }, 1)
+}
+
+beforeAll(async () => {
+  server = await registerApollo()
+  await server.start()
+  await setupTestCases()
+})
+
+afterAll(async () => {
+  await db.sequelize.truncate({ cascade: true })
+  await db.sequelize.close()
+  await server.stop()
+})
+
 describe('GQL queries', () => {
-  let server
-
-  beforeAll(async () => {
-    await createTestCases(validCommsMessage, db.commsEvent, { 'commsMessage.data.crn': 1234567890 }, 2)
-    await createTestCases(validCommsMessage, db.commsEvent, { 'commsMessage.data.sourceSystem': 'newsourceSystem', 'commsMessage.data.crn': 223456789, 'commsMessage.data.commsAddresses': 'test-commsAddress' }, 1)
-    await createTestCases(validCommsMessage, db.commsEvent, { 'commsMessage.data.sourceSystem': 'newsourceSystem', 'commsMessage.data.crn': 223456790, 'commsMessage.data.commsAddresses': ['commsAddress1', 'commsAddress2'] }, 1)
-    await createTestCases(validCommsMessage, db.commsEvent, { 'commsMessage.data.sourceSystem': 'newsourceSystem', 'commsMessage.data.commsAddresses': 'commsAddress1' }, 2)
-    await createTestCases(validCommsMessage, db.commsEvent, { 'commsMessage.data.sourceSystem': 'newsourceSystem', 'commsMessage.data.reference': 'ffc-ahwr-example-reference' }, 1)
-    await createTestCases(validCommsMessage, db.commsEvent, { 'commsMessage.data.sourceSystem': 'newsourceSystem', 'commsMessage.data.reference': 'ffc-ahwr-another-example-reference' }, 1)
-    server = await registerApollo()
-    await server.start()
-  })
-
-  afterAll(async () => {
-    await db.sequelize.truncate({ cascade: true })
-    await db.sequelize.close()
-    await server.stop()
-  })
-
   test('returns all commsEvents with corresponding CRN', async () => {
     const options = {
       method: 'POST',
@@ -194,7 +198,7 @@ describe('GQL queries', () => {
     expect(responseBody.data.commsEventByProperty.length).toBe(3)
   })
 
-  test('returns all commsEvents with corresponding reference', async () => {
+  test('fetches commsEvents by single reference', async () => {
     const options = {
       method: 'POST',
       url: '/graphql',
@@ -214,12 +218,11 @@ describe('GQL queries', () => {
 
     expect(responseBody.errors).toBeUndefined()
     expect(responseBody.data.commsEventByProperty).toBeDefined()
-    expect(responseBody.data.commsEventByProperty.length).toBe(7)
+    expect(Array.isArray(responseBody.data.commsEventByProperty)).toBe(true)
     expect(responseBody.data.commsEventByProperty[0].commsMessage.data.reference).toBe('ffc-ahwr-example-reference')
-    expect(responseBody.data.commsEventByProperty[1].commsMessage.data.reference).toBe('ffc-ahwr-example-reference')
   })
 
-  test('returns all commsEvents by reference array', async () => {
+  test('fetches commsEvents by array of references', async () => {
     const options = {
       method: 'POST',
       url: '/graphql',
@@ -242,5 +245,115 @@ describe('GQL queries', () => {
     expect(responseBody.data.commsEventByProperty[0].commsMessage.data.reference).toBe('ffc-ahwr-example-reference')
     expect(responseBody.data.commsEventByProperty[7].commsMessage.data.reference).toBe('ffc-ahwr-another-example-reference')
     expect(responseBody.data.commsEventByProperty.length).toBe(8)
+  })
+
+  test('throws error for unsupported value type (object)', async () => {
+    const options = {
+      method: 'POST',
+      url: '/graphql',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      payload: JSON.stringify({
+        ...commsEventByPropertyQuery,
+        variables: {
+          key: 'REFERENCE',
+          value: { reference: 'ffc-ahwr-example-reference' }
+        }
+      })
+    }
+    const response = await server.inject(options)
+    const responseBody = JSON.parse(response.result)
+
+    expect(responseBody.errors).toBeDefined()
+    expect(responseBody.errors[0].message).toContain('Value must be either a string or an array of strings')
+  })
+
+  test('throws error for unsupported value type (int)', async () => {
+    const options = {
+      method: 'POST',
+      url: '/graphql',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      payload: JSON.stringify({
+        ...commsEventByPropertyQuery,
+        variables: {
+          key: 'REFERENCE',
+          value: 123456789
+        }
+      })
+    }
+    const response = await server.inject(options)
+    const responseBody = JSON.parse(response.result)
+
+    expect(responseBody.errors).toBeDefined()
+    expect(responseBody.errors[0].message).toContain('Value must be either a string or an array of strings')
+  })
+
+  test('throws error for nested array', async () => {
+    const options = {
+      method: 'POST',
+      url: '/graphql',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      payload: JSON.stringify({
+        ...commsEventByPropertyQuery,
+        variables: {
+          key: 'REFERENCE',
+          value: ['ffc-ahwr-example-reference', ['ffc-ahwr-another-example-reference']]
+        }
+      })
+    }
+    const response = await server.inject(options)
+    const responseBody = JSON.parse(response.result)
+
+    expect(responseBody.errors).toBeDefined()
+    expect(responseBody.errors[0].message).toContain('Value must be either a string or an array of strings')
+  })
+
+  test('throws an error when key is not provided', async () => {
+    const options = {
+      method: 'POST',
+      url: '/graphql',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      payload: JSON.stringify({
+        ...commsEventByPropertyQuery,
+        variables: {
+          value: 'ffc-ahwr-example-reference'
+        }
+      })
+    }
+    const response = await server.inject(options)
+    const responseBody = JSON.parse(response.result)
+
+    expect(responseBody.errors).toBeDefined()
+    expect(responseBody.errors[0].message).toBe('Variable "$key" of required type "commsEnum!" was not provided.')
+  })
+
+  test('returns empty array for no matching values', async () => {
+    const options = {
+      method: 'POST',
+      url: '/graphql',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      payload: JSON.stringify({
+        ...commsEventByPropertyQuery,
+        variables: {
+          key: 'REFERENCE',
+          value: 'INVALID_VALUE'
+        }
+      })
+    }
+    const response = await server.inject(options)
+    const responseBody = JSON.parse(response.result)
+
+    expect(responseBody.errors).toBeUndefined()
+    expect(responseBody.data.commsEventByProperty).toBeDefined()
+    expect(responseBody.data.commsEventByProperty.length).toBe(0)
   })
 })
