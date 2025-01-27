@@ -1,21 +1,17 @@
 import db from '../../../data/index.js'
 import enumMap from '../../schema/comms-message/enum-map.js'
-import getCommsEventByCommsAddresses from './get-comms-event-by-comms-addresses.js'
 import { Op } from 'sequelize'
 
 const getCommsEventByProperty = async (_, { key, value }) => {
   const mappedKey = enumMap[key]
   const values = Array.isArray(value) ? value.map(String) : [String(value)]
 
-  if (mappedKey === enumMap.COMMS_ADDRESSES) {
-    return getCommsEventByCommsAddresses(mappedKey, value)
-  }
-
   const commsEventRecords = await db.commsEvent.findAll({
     where: {
-      [`commsMessage.${mappedKey}`]: {
-        [Op.in]: values
-      }
+      [Op.or]: [
+        { [`commsMessage.${mappedKey}`]: { [Op.in]: values } },
+        { [`commsMessage.${mappedKey}`]: { [Op.contains]: JSON.stringify(values) } }
+      ]
     }
   })
 
