@@ -17,11 +17,24 @@ type Query {
   """
   commsEventByProperty(key: commsEnum!, value: StringOrArray!): [CommsEvent]
 
-   """
+  """
   GET comms events filtered by a specific property and value
   Supports cursor-based pagination
   """
   commsEventByPaginatedProperty(key: commsEnum!, value: StringOrArray!, first: Int, after: String, last: Int, before: String): CommsEventConnection
+
+  """
+  GET comms events by multiple properties in a single request
+  """
+  commsEventsByProperties(queries: [CommsEventQueryInput!]!): [[CommsEvent!]!]!
+}
+
+"""
+Input type for comms event query
+"""
+input CommsEventQueryInput {
+  key: commsEnum!
+  value: StringOrArray!
 }
 
 """
