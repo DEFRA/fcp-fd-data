@@ -57,10 +57,10 @@ type commsMessageDetails {
 """ Data structure for communication content """
 type commsData {
   """ Customer Reference Number """
-  crn: Int
+  crn: String
 
   """ Single Business Identifier """
-  sbi: Int
+  sbi: String
 
   """ Type of the communication (e.g., email, sms) """
   commsType: String

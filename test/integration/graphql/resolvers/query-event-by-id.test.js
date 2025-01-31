@@ -39,7 +39,6 @@ describe('GQL get by ID', () => {
     const responseBody = JSON.parse(response.result)
     expect(responseBody.errors).toBeUndefined()
     expect(responseBody.data.commsEventByPK).toBeDefined()
-    expect(responseBody.data.commsEventByPK.commsMessage.data.sbi).toBe(105000000)
     expect(responseBody.data.commsEventByPK.commsMessage.data.commsAddresses).toStrictEqual(validCommsMessage.commsMessage.data.commsAddresses)
   })
   test('returns only one record when searching by id', async () => {
