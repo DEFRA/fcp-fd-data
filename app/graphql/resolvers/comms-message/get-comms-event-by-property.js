@@ -26,9 +26,18 @@ const getCommsEventByProperty = async (_, { key, value }) => {
       specversion: record.dataValues.commsMessage.specversion,
       datacontenttype: record.dataValues.commsMessage.datacontenttype,
       data: {
-        crn: record.dataValues.commsMessage.data.crn,
+        commsType: record.dataValues.commsMessage.data.commsType,
         commsAddresses: record.dataValues.commsMessage.data.commsAddresses,
-        reference: record.dataValues.commsMessage.data.reference
+        correlationId: record.dataValues.commsMessage.data.correlationId,
+        crn: record.dataValues.commsMessage.data.crn,
+        emailReplyToId: record.dataValues.commsMessage.data.emailReplyToId,
+        notifyTemplateId: record.dataValues.commsMessage.data.notifyTemplateId,
+        oneClickUnsubscribeUrl: record.dataValues.commsMessage.data.oneClickUnsubscribeUrl,
+        personalisation: record.dataValues.commsMessage.data.personalisation,
+        reference: record.dataValues.commsMessage.data.reference,
+        sbi: record.dataValues.commsMessage.data.sbi,
+        sourceSystem: record.dataValues.commsMessage.data.sourceSystem,
+        statusDetails: record.dataValues.commsMessage.data.statusDetails
       }
     }
   }))
