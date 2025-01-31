@@ -88,6 +88,9 @@ type commsData {
 
   """ govNotify template ID """
   notifyTemplateId: String
+
+  """ govNotify unsubscribe URL """
+  oneClickUnsubscribeUrl: String
 }
 
 """ Enumeration for comms properties """

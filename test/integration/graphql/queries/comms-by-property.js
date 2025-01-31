@@ -16,6 +16,8 @@ export default {
                 statusDetails
                 correlationId
                 personalisation
+                notifyTemplateId
+                oneClickUnsubscribeUrl
               }
               time
               type
