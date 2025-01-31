@@ -7,9 +7,9 @@ import createTestCases from '../../../helper-functions/create-database-entries.j
 let server
 
 const setupTestCases = async () => {
-  await createTestCases(validCommsMessage, db.commsEvent, { 'commsMessage.data.crn': 1234567890 }, 2)
-  await createTestCases(validCommsMessage, db.commsEvent, { 'commsMessage.data.sourceSystem': 'newsourceSystem', 'commsMessage.data.crn': 223456789, 'commsMessage.data.commsAddresses': 'test-commsAddress' }, 1)
-  await createTestCases(validCommsMessage, db.commsEvent, { 'commsMessage.data.sourceSystem': 'newsourceSystem', 'commsMessage.data.crn': 223456790, 'commsMessage.data.commsAddresses': ['commsAddress1', 'commsAddress2'] }, 1)
+  await createTestCases(validCommsMessage, db.commsEvent, { 'commsMessage.data.crn': '1050000000' }, 2)
+  await createTestCases(validCommsMessage, db.commsEvent, { 'commsMessage.data.sourceSystem': 'newsourceSystem', 'commsMessage.data.crn': '223456789', 'commsMessage.data.commsAddresses': 'test-commsAddress' }, 1)
+  await createTestCases(validCommsMessage, db.commsEvent, { 'commsMessage.data.sourceSystem': 'newsourceSystem', 'commsMessage.data.crn': '223456790', 'commsMessage.data.commsAddresses': ['commsAddress1', 'commsAddress2'] }, 1)
   await createTestCases(validCommsMessage, db.commsEvent, { 'commsMessage.data.sourceSystem': 'newsourceSystem', 'commsMessage.data.commsAddresses': 'commsAddress1' }, 2)
   await createTestCases(validCommsMessage, db.commsEvent, { 'commsMessage.data.sourceSystem': 'newsourceSystem', 'commsMessage.data.reference': 'ffc-ahwr-example-reference' }, 1)
   await createTestCases(validCommsMessage, db.commsEvent, { 'commsMessage.data.sourceSystem': 'newsourceSystem', 'commsMessage.data.reference': 'ffc-ahwr-another-example-reference' }, 1)
@@ -39,7 +39,7 @@ describe('GQL queries', () => {
         ...commsEventByPropertyQuery,
         variables: {
           key: 'CRN',
-          value: '1234567890'
+          value: '1050000000'
         }
       })
     }
@@ -48,8 +48,8 @@ describe('GQL queries', () => {
     const responseBody = JSON.parse(response.result)
     expect(responseBody.errors).toBeUndefined()
     expect(responseBody.data.commsEventByProperty).toBeDefined()
-    expect(responseBody.data.commsEventByProperty.length).toBe(2)
-    expect(responseBody.data.commsEventByProperty[0].commsMessage.data.crn).toBe(1234567890)
+    expect(responseBody.data.commsEventByProperty.length).toBe(6)
+    expect(responseBody.data.commsEventByProperty[0].commsMessage).toStrictEqual(validCommsMessage.commsMessage)
   })
 
   test('returns a single commsEvent by CRN when multiple records in database', async () => {
@@ -74,7 +74,7 @@ describe('GQL queries', () => {
     expect(responseBody.errors).toBeUndefined()
     expect(responseBody.data.commsEventByProperty).toBeDefined()
     expect(responseBody.data.commsEventByProperty.length).toBe(1)
-    expect(responseBody.data.commsEventByProperty[0].commsMessage.data.crn).toBe(223456789)
+    expect(responseBody.data.commsEventByProperty[0].commsMessage.data.crn).toBe('223456789')
   })
 
   test('returns all records with same REFERENCE when CRNs are different', async () => {
@@ -99,9 +99,9 @@ describe('GQL queries', () => {
     expect(responseBody.errors).toBeUndefined()
     expect(responseBody.data.commsEventByProperty).toBeDefined()
     expect(responseBody.data.commsEventByProperty.length).toBe(7)
-    expect(responseBody.data.commsEventByProperty[0].commsMessage.data.crn).toBe(1234567890)
-    expect(responseBody.data.commsEventByProperty[1].commsMessage.data.crn).toBe(1234567890)
-    expect(responseBody.data.commsEventByProperty[2].commsMessage.data.crn).toBe(223456789)
+    expect(responseBody.data.commsEventByProperty[0].commsMessage.data.crn).toBe('1050000000')
+    expect(responseBody.data.commsEventByProperty[1].commsMessage.data.crn).toBe('1050000000')
+    expect(responseBody.data.commsEventByProperty[2].commsMessage.data.crn).toBe('223456789')
   })
 
   test('returns commsAddresses as an array when it is an array in the database', async () => {
@@ -122,7 +122,7 @@ describe('GQL queries', () => {
     const response = await server.inject(options)
     const responseBody = JSON.parse(response.result)
     expect(responseBody.errors).toBeUndefined()
-    expect(responseBody.data.commsEventByProperty[0].commsMessage.data.crn).toBe(223456790)
+    expect(responseBody.data.commsEventByProperty[0].commsMessage.data.crn).toBe('223456790')
     expect(responseBody.data.commsEventByProperty[0].commsMessage.data.commsAddresses).toStrictEqual(['commsAddress1', 'commsAddress2'])
   })
 
@@ -144,8 +144,8 @@ describe('GQL queries', () => {
     const response = await server.inject(options)
     const responseBody = JSON.parse(response.result)
     expect(responseBody.errors).toBeUndefined()
-    expect(responseBody.data.commsEventByProperty[0].commsMessage.data.crn).toBe(1050000000)
-    expect(responseBody.data.commsEventByProperty[0].commsMessage.data.commsAddresses).toStrictEqual('commsAddress1')
+    expect(responseBody.data.commsEventByProperty[0].commsMessage.data.crn).toBe('1050000000')
+    expect(responseBody.data.commsEventByProperty[0].commsMessage).toStrictEqual(validCommsMessage.commsMessage)
   })
 
   test('returns mixed commsAddresses types correctly', async () => {
@@ -167,9 +167,9 @@ describe('GQL queries', () => {
     const responseBody = JSON.parse(response.result)
     expect(responseBody.errors).toBeUndefined()
     expect(responseBody.data.commsEventByProperty.length).toBe(6)
-    expect(responseBody.data.commsEventByProperty[0].commsMessage.data.crn).toBe(223456789)
+    expect(responseBody.data.commsEventByProperty[0].commsMessage.data.crn).toBe('223456789')
     expect(responseBody.data.commsEventByProperty[0].commsMessage.data.commsAddresses).toStrictEqual('test-commsAddress')
-    expect(responseBody.data.commsEventByProperty[1].commsMessage.data.crn).toBe(223456790)
+    expect(responseBody.data.commsEventByProperty[1].commsMessage.data.crn).toBe('223456790')
     expect(responseBody.data.commsEventByProperty[1].commsMessage.data.commsAddresses).toStrictEqual(['commsAddress1', 'commsAddress2'])
   })
 
