@@ -18,11 +18,17 @@ const setupTestCases = async () => {
 beforeAll(async () => {
   server = await registerApollo()
   await server.start()
+})
+
+beforeEach(async () => {
   await setupTestCases()
 })
 
-afterAll(async () => {
+afterEach(async () => {
   await db.sequelize.truncate({ cascade: true })
+})
+
+afterAll(async () => {
   await db.sequelize.close()
   await server.stop()
 })
@@ -242,8 +248,8 @@ describe('GQL queries', () => {
 
     expect(responseBody.errors).toBeUndefined()
     expect(responseBody.data.commsEventByProperty).toBeDefined()
-    expect(responseBody.data.commsEventByProperty[0].commsMessage.data.reference).toBe('ffc-ahwr-example-reference')
-    expect(responseBody.data.commsEventByProperty[7].commsMessage.data.reference).toBe('ffc-ahwr-another-example-reference')
+    expect(responseBody.data.commsEventByProperty.filter(record => record.commsMessage.data.reference === 'ffc-ahwr-example-reference').length).toBe(7)
+    expect(responseBody.data.commsEventByProperty.filter(record => record.commsMessage.data.reference === 'ffc-ahwr-another-example-reference').length).toBe(1)
     expect(responseBody.data.commsEventByProperty.length).toBe(8)
   })
 
@@ -355,5 +361,58 @@ describe('GQL queries', () => {
     expect(responseBody.errors).toBeUndefined()
     expect(responseBody.data.commsEventByProperty).toBeDefined()
     expect(responseBody.data.commsEventByProperty.length).toBe(0)
+  })
+
+  test('should return all records that contain a matching commsAddress when querying with an array', async () => {
+    await createTestCases(validCommsMessage, db.commsEvent, { 'commsMessage.data.commsAddresses': ["test1", "test2"] }, 1) //eslint-disable-line
+    await createTestCases(validCommsMessage, db.commsEvent, { 'commsMessage.data.commsAddresses': 'test1' }, 1)
+    await createTestCases(validCommsMessage, db.commsEvent, { 'commsMessage.data.commsAddresses': 'test2' }, 1)
+    await createTestCases(validCommsMessage, db.commsEvent, { 'commsMessage.data.commsAddresses': 'test3' }, 1)
+    await createTestCases(validCommsMessage, db.commsEvent, { 'commsMessage.data.commsAddresses': 'test4' }, 1)
+    await createTestCases(validCommsMessage, db.commsEvent, { 'commsMessage.data.commsAddresses': ['test3', 'test4'] }, 1)
+
+    const options = {
+      method: 'POST',
+      url: '/graphql',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      payload: JSON.stringify({
+        ...commsEventByPropertyQuery,
+        variables: {
+          key: 'COMMS_ADDRESSES',
+          value: ['test1', 'test2', 'test3', 'test4']
+        }
+      })
+    }
+    const response = await server.inject(options)
+    const responseBody = JSON.parse(response.result)
+
+    expect(responseBody.errors).toBeUndefined()
+    expect(responseBody.data.commsEventByProperty).toBeDefined()
+    expect(responseBody.data.commsEventByProperty.length).toBe(6)
+  })
+
+  test('should return all records when querying on a property not nested within data property', async () => {
+    const options = {
+      method: 'POST',
+      url: '/graphql',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      payload: JSON.stringify({
+        ...commsEventByPropertyQuery,
+        variables: {
+          key: 'TYPE',
+          value: 'uk.gov.fcp.sfd.notification.request'
+        }
+      })
+    }
+    const response = await server.inject(options)
+    const responseBody = JSON.parse(response.result)
+
+    expect(responseBody.errors).toBeUndefined()
+    expect(responseBody.data.commsEventByProperty).toBeDefined()
+    expect(responseBody.data.commsEventByProperty.length).toBe(8)
   })
 })
