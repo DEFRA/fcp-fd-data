@@ -33,7 +33,7 @@ afterAll(async () => {
   await server.stop()
 })
 
-describe('GQL queries', () => {
+describe('GQL: Submit commsEvent by property query via endpoint', () => {
   test('returns all commsEvents with corresponding CRN', async () => {
     const options = {
       method: 'POST',
@@ -83,6 +83,54 @@ describe('GQL queries', () => {
     expect(responseBody.data.commsEventByProperty[0].commsMessage.data.crn).toBe('223456789')
   })
 
+  test('returns empty array for no matching values', async () => {
+    const options = {
+      method: 'POST',
+      url: '/graphql',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      payload: JSON.stringify({
+        ...commsEventByPropertyQuery,
+        variables: {
+          key: 'REFERENCE',
+          value: 'INVALID_VALUE'
+        }
+      })
+    }
+    const response = await server.inject(options)
+    const responseBody = JSON.parse(response.result)
+
+    expect(responseBody.errors).toBeUndefined()
+    expect(responseBody.data.commsEventByProperty).toBeDefined()
+    expect(responseBody.data.commsEventByProperty.length).toBe(0)
+  })
+
+  test('should return all records when querying on a property not nested within data property', async () => {
+    const options = {
+      method: 'POST',
+      url: '/graphql',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      payload: JSON.stringify({
+        ...commsEventByPropertyQuery,
+        variables: {
+          key: 'TYPE',
+          value: 'uk.gov.fcp.sfd.notification.request'
+        }
+      })
+    }
+    const response = await server.inject(options)
+    const responseBody = JSON.parse(response.result)
+
+    expect(responseBody.errors).toBeUndefined()
+    expect(responseBody.data.commsEventByProperty).toBeDefined()
+    expect(responseBody.data.commsEventByProperty.length).toBe(8)
+  })
+})
+
+describe('GQL: Query commsEvents using reference as property', () => {
   test('returns all records with same REFERENCE when CRNs are different', async () => {
     const options = {
       method: 'POST',
@@ -110,6 +158,57 @@ describe('GQL queries', () => {
     expect(responseBody.data.commsEventByProperty[2].commsMessage.data.crn).toBe('223456789')
   })
 
+  test('fetches commsEvents by single reference', async () => {
+    const options = {
+      method: 'POST',
+      url: '/graphql',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      payload: JSON.stringify({
+        ...commsEventByPropertyQuery,
+        variables: {
+          key: 'REFERENCE',
+          value: 'ffc-ahwr-example-reference'
+        }
+      })
+    }
+    const response = await server.inject(options)
+    const responseBody = JSON.parse(response.result)
+
+    expect(responseBody.errors).toBeUndefined()
+    expect(responseBody.data.commsEventByProperty).toBeDefined()
+    expect(Array.isArray(responseBody.data.commsEventByProperty)).toBe(true)
+    expect(responseBody.data.commsEventByProperty[0].commsMessage.data.reference).toBe('ffc-ahwr-example-reference')
+  })
+
+  test('fetches commsEvents by array of references', async () => {
+    const options = {
+      method: 'POST',
+      url: '/graphql',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      payload: JSON.stringify({
+        ...commsEventByPropertyQuery,
+        variables: {
+          key: 'REFERENCE',
+          value: ['ffc-ahwr-example-reference', 'ffc-ahwr-another-example-reference']
+        }
+      })
+    }
+    const response = await server.inject(options)
+    const responseBody = JSON.parse(response.result)
+
+    expect(responseBody.errors).toBeUndefined()
+    expect(responseBody.data.commsEventByProperty).toBeDefined()
+    expect(responseBody.data.commsEventByProperty.filter(record => record.commsMessage.data.reference === 'ffc-ahwr-example-reference').length).toBe(7)
+    expect(responseBody.data.commsEventByProperty.filter(record => record.commsMessage.data.reference === 'ffc-ahwr-another-example-reference').length).toBe(1)
+    expect(responseBody.data.commsEventByProperty.length).toBe(8)
+  })
+})
+
+describe('GQL: Query commsEvents using commsAddress as property', () => {
   test('returns commsAddresses as an array when it is an array in the database', async () => {
     const options = {
       method: 'POST',
@@ -204,7 +303,14 @@ describe('GQL queries', () => {
     expect(responseBody.data.commsEventByProperty.length).toBe(3)
   })
 
-  test('fetches commsEvents by single reference', async () => {
+  test('should return all records that contain a matching commsAddress when querying with an array', async () => {
+    await createTestCases(validCommsMessage, db.commsEvent, { 'commsMessage.data.commsAddresses': ["test1", "test2"] }, 1) //eslint-disable-line
+    await createTestCases(validCommsMessage, db.commsEvent, { 'commsMessage.data.commsAddresses': 'test1' }, 1)
+    await createTestCases(validCommsMessage, db.commsEvent, { 'commsMessage.data.commsAddresses': 'test2' }, 1)
+    await createTestCases(validCommsMessage, db.commsEvent, { 'commsMessage.data.commsAddresses': 'test3' }, 1)
+    await createTestCases(validCommsMessage, db.commsEvent, { 'commsMessage.data.commsAddresses': 'test4' }, 1)
+    await createTestCases(validCommsMessage, db.commsEvent, { 'commsMessage.data.commsAddresses': ['test3', 'test4'] }, 1)
+
     const options = {
       method: 'POST',
       url: '/graphql',
@@ -214,8 +320,8 @@ describe('GQL queries', () => {
       payload: JSON.stringify({
         ...commsEventByPropertyQuery,
         variables: {
-          key: 'REFERENCE',
-          value: 'ffc-ahwr-example-reference'
+          key: 'COMMS_ADDRESSES',
+          value: ['test1', 'test2', 'test3', 'test4']
         }
       })
     }
@@ -224,35 +330,11 @@ describe('GQL queries', () => {
 
     expect(responseBody.errors).toBeUndefined()
     expect(responseBody.data.commsEventByProperty).toBeDefined()
-    expect(Array.isArray(responseBody.data.commsEventByProperty)).toBe(true)
-    expect(responseBody.data.commsEventByProperty[0].commsMessage.data.reference).toBe('ffc-ahwr-example-reference')
+    expect(responseBody.data.commsEventByProperty.length).toBe(6)
   })
+})
 
-  test('fetches commsEvents by array of references', async () => {
-    const options = {
-      method: 'POST',
-      url: '/graphql',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      payload: JSON.stringify({
-        ...commsEventByPropertyQuery,
-        variables: {
-          key: 'REFERENCE',
-          value: ['ffc-ahwr-example-reference', 'ffc-ahwr-another-example-reference']
-        }
-      })
-    }
-    const response = await server.inject(options)
-    const responseBody = JSON.parse(response.result)
-
-    expect(responseBody.errors).toBeUndefined()
-    expect(responseBody.data.commsEventByProperty).toBeDefined()
-    expect(responseBody.data.commsEventByProperty.filter(record => record.commsMessage.data.reference === 'ffc-ahwr-example-reference').length).toBe(7)
-    expect(responseBody.data.commsEventByProperty.filter(record => record.commsMessage.data.reference === 'ffc-ahwr-another-example-reference').length).toBe(1)
-    expect(responseBody.data.commsEventByProperty.length).toBe(8)
-  })
-
+describe('GQL: Endpoint errors for commsEvent queries', () => {
   test('throws error for unsupported value type (object)', async () => {
     const options = {
       method: 'POST',
@@ -338,81 +420,5 @@ describe('GQL queries', () => {
 
     expect(responseBody.errors).toBeDefined()
     expect(responseBody.errors[0].message).toBe('Variable "$key" of required type "commsEnum!" was not provided.')
-  })
-
-  test('returns empty array for no matching values', async () => {
-    const options = {
-      method: 'POST',
-      url: '/graphql',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      payload: JSON.stringify({
-        ...commsEventByPropertyQuery,
-        variables: {
-          key: 'REFERENCE',
-          value: 'INVALID_VALUE'
-        }
-      })
-    }
-    const response = await server.inject(options)
-    const responseBody = JSON.parse(response.result)
-
-    expect(responseBody.errors).toBeUndefined()
-    expect(responseBody.data.commsEventByProperty).toBeDefined()
-    expect(responseBody.data.commsEventByProperty.length).toBe(0)
-  })
-
-  test('should return all records that contain a matching commsAddress when querying with an array', async () => {
-    await createTestCases(validCommsMessage, db.commsEvent, { 'commsMessage.data.commsAddresses': ["test1", "test2"] }, 1) //eslint-disable-line
-    await createTestCases(validCommsMessage, db.commsEvent, { 'commsMessage.data.commsAddresses': 'test1' }, 1)
-    await createTestCases(validCommsMessage, db.commsEvent, { 'commsMessage.data.commsAddresses': 'test2' }, 1)
-    await createTestCases(validCommsMessage, db.commsEvent, { 'commsMessage.data.commsAddresses': 'test3' }, 1)
-    await createTestCases(validCommsMessage, db.commsEvent, { 'commsMessage.data.commsAddresses': 'test4' }, 1)
-    await createTestCases(validCommsMessage, db.commsEvent, { 'commsMessage.data.commsAddresses': ['test3', 'test4'] }, 1)
-
-    const options = {
-      method: 'POST',
-      url: '/graphql',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      payload: JSON.stringify({
-        ...commsEventByPropertyQuery,
-        variables: {
-          key: 'COMMS_ADDRESSES',
-          value: ['test1', 'test2', 'test3', 'test4']
-        }
-      })
-    }
-    const response = await server.inject(options)
-    const responseBody = JSON.parse(response.result)
-
-    expect(responseBody.errors).toBeUndefined()
-    expect(responseBody.data.commsEventByProperty).toBeDefined()
-    expect(responseBody.data.commsEventByProperty.length).toBe(6)
-  })
-
-  test('should return all records when querying on a property not nested within data property', async () => {
-    const options = {
-      method: 'POST',
-      url: '/graphql',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      payload: JSON.stringify({
-        ...commsEventByPropertyQuery,
-        variables: {
-          key: 'TYPE',
-          value: 'uk.gov.fcp.sfd.notification.request'
-        }
-      })
-    }
-    const response = await server.inject(options)
-    const responseBody = JSON.parse(response.result)
-
-    expect(responseBody.errors).toBeUndefined()
-    expect(responseBody.data.commsEventByProperty).toBeDefined()
-    expect(responseBody.data.commsEventByProperty.length).toBe(8)
   })
 })
