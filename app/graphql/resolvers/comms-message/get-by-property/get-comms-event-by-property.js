@@ -1,23 +1,6 @@
-import db from '../../../data/index.js'
-import enumMap from '../../schema/comms-message/enum-map.js'
-
-const valuesMap = values => {
-  const mappedValues = values.map(val => `'${val}'`).join(', ')
-  return `ARRAY[${mappedValues}]`
-}
-
-const whereClause = (mappedKey, values) => {
-  const keys = mappedKey.split('.')
-  if (keys.length === 1) {
-    return `"commsMessage"->>'${mappedKey}' = '${values[0]}'`
-  }
-  return `"commsMessage"->'${keys[0]}'->'${keys[1]}' ?| ${valuesMap(values)} `
-}
-
-const buildQuery = (mappedKey, values) => {
-  const where = whereClause(mappedKey, values)
-  return `SELECT * FROM "public"."commsEvent" AS "commsEvent" WHERE ${where}`
-}
+import db from '../../../../data/index.js'
+import enumMap from '../../../schema/comms-message/enum-map.js'
+import buildQuery from './build-query.js'
 
 const getCommsEventByProperty = async (_, { key, value }) => {
   const mappedKey = enumMap[key]
