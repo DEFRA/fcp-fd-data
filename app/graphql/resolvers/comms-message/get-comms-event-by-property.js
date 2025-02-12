@@ -1,13 +1,22 @@
 import db from '../../../data/index.js'
 import enumMap from '../../schema/comms-message/enum-map.js'
 
-const valuesMap = values => `ARRAY[${values.map(val => `'${val}'`).join(', ')}]`
+const valuesMap = values => {
+  const mappedValues = values.map(val => `'${val}'`).join(', ')
+  return `ARRAY[${mappedValues}]`
+}
 
 const whereClause = (mappedKey, values) => {
-  if (mappedKey.split('.').length === 1) {
+  const keys = mappedKey.split('.')
+  if (keys.length === 1) {
     return `"commsMessage"->>'${mappedKey}' = '${values[0]}'`
   }
-  return `"commsMessage"->'${mappedKey.split('.')[0]}'->'${mappedKey.split('.')[1]}' ?| ${valuesMap(values)} `
+  return `"commsMessage"->'${keys[0]}'->'${keys[1]}' ?| ${valuesMap(values)} `
+}
+
+const buildQuery = (mappedKey, values) => {
+  const where = whereClause(mappedKey, values)
+  return `SELECT * FROM "public"."commsEvent" AS "commsEvent" WHERE ${where}`
 }
 
 const getCommsEventByProperty = async (_, { key, value }) => {
@@ -15,53 +24,17 @@ const getCommsEventByProperty = async (_, { key, value }) => {
   const values = Array.isArray(value) ? value.map(String) : [String(value)]
 
   try {
-    const query =
-     `SELECT *
-      FROM "public"."commsEvent" AS "commsEvent"
-      WHERE ${whereClause(mappedKey, values)}`
+    const query = buildQuery(mappedKey, values)
 
     const commsEventRecords = await db.sequelize.query(query, {
       type: db.sequelize.QueryTypes.SELECT,
       model: db.commsEvent
     })
-    // const commsEventRecords = await db.commsEvent.findAll({
-    //   where: {
-    //     [`commsMessage.${mappedKey}`]: {
-    //       [Op.anyKeyExists]: values::jsonb
-
-    //     }
-    //     // [Op.or]: [
-    //     //   // { [`commsMessage.${mappedKey}`]: { [Op.in]: values } },
-    //     //   // { [`commsMessage.${mappedKey}`]: { [Op.contains]: JSON.stringify(§) } },
-    //     // ]
-    //   }
-    // })
 
     return commsEventRecords.map(record => ({
       id: record.dataValues.id,
       dateCreated: record.dataValues.dateCreated,
-      commsMessage: {
-        id: record.dataValues.commsMessage.id,
-        time: record.dataValues.commsMessage.time,
-        type: record.dataValues.commsMessage.type,
-        source: record.dataValues.commsMessage.source,
-        specversion: record.dataValues.commsMessage.specversion,
-        datacontenttype: record.dataValues.commsMessage.datacontenttype,
-        data: {
-          commsType: record.dataValues.commsMessage.data.commsType,
-          commsAddresses: record.dataValues.commsMessage.data.commsAddresses,
-          correlationId: record.dataValues.commsMessage.data.correlationId,
-          crn: record.dataValues.commsMessage.data.crn,
-          emailReplyToId: record.dataValues.commsMessage.data.emailReplyToId,
-          notifyTemplateId: record.dataValues.commsMessage.data.notifyTemplateId,
-          oneClickUnsubscribeUrl: record.dataValues.commsMessage.data.oneClickUnsubscribeUrl,
-          personalisation: record.dataValues.commsMessage.data.personalisation,
-          reference: record.dataValues.commsMessage.data.reference,
-          sbi: record.dataValues.commsMessage.data.sbi,
-          sourceSystem: record.dataValues.commsMessage.data.sourceSystem,
-          statusDetails: record.dataValues.commsMessage.data.statusDetails
-        }
-      }
+      commsMessage: record.dataValues.commsMessage
     }))
   } catch (error) {
     console.error('Error fetching comms event by property', error)

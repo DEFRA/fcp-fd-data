@@ -18,6 +18,8 @@ services:
       NODE_OPTIONS: "$NODE_OPTIONS --experimental-vm-modules"
 
   fcp-fd-data-postgres:
+      ports:
+      - "6033:5432"
       volumes:
         - postgres_data:/var/lib/postgresql/data
 
