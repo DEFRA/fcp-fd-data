@@ -4,8 +4,9 @@ export const commsMessage = {
   specversion: '1.0',
   type: 'uk.gov.fcp.sfd.notification.request',
   datacontenttype: 'application/json',
-  time: '2023-10-17T14:48:00Z',
+  time: '2023-10-17T14:48:00.000Z',
   data: {
+    correlationId: 'a058de5b-42ad-473c-91e7-0797a43fda30',
     crn: '1050000000',
     sbi: '105000000',
     sourceSystem: 'AHWP',
@@ -21,6 +22,7 @@ export const commsMessage = {
       amount: '100'
     },
     reference: 'ffc-ahwr-example-reference',
+    statusDetails: { status: 'delivered' },
     oneClickUnsubscribeUrl: 'https://unsubscribe.example.com',
     emailReplyToId: '8e222534-7f05-4972-86e3-17c5d9f894e2'
   }
