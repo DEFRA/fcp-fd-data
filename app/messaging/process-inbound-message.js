@@ -5,10 +5,10 @@ import processFileMetadata from './messages/process-file-metadata.js'
 const processInboundMessage = async (message, receiver) => {
   try {
     switch (true) {
-      case Object.prototype.hasOwnProperty.call(message.body, COMMS_EVENT):
+      case Object.hasOwn(message.body, COMMS_EVENT):
         await processCommsMessage(message, receiver)
         break
-      case Object.prototype.hasOwnProperty.call(message.body, FILE_METADATA):
+      case Object.hasOwn(message.body, FILE_METADATA):
         await processFileMetadata(message, receiver)
         break
       default:
