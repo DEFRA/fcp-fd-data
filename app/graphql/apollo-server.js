@@ -7,10 +7,10 @@ import typeDefs from './schema/index.js'
 import { isLowerEnv } from '../utils/is-lower-env.js'
 let plugins = []
 
-if (!isLowerEnv(process.env.ENVIRONMENT_CODE)) {
-  plugins = [ApolloServerPluginLandingPageDisabled()]
-} else {
+if (isLowerEnv(process.env.ENVIRONMENT_CODE)) {
   plugins = [ApolloServerPluginLandingPageLocalDefault({ embed: true })]
+} else {
+  plugins = [ApolloServerPluginLandingPageDisabled()]
 }
 
 export default new ApolloServer({

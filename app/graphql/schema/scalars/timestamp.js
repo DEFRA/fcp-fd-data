@@ -15,7 +15,7 @@ const timestamp = new GraphQLScalarType({
 
   parseLiteral (ast) {
     if (ast.kind === Kind.INT) {
-      return new Date(parseInt(ast.value, 10))
+      return new Date(Number.parseInt(ast.value, 10))
     }
     if (ast.kind === Kind.STRING) {
       return new Date(ast.value)

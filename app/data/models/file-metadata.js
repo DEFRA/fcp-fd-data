@@ -1,4 +1,4 @@
-export default (sequelize, DataTypes) => {
+const fileMetadata = (sequelize, DataTypes) => {
   return sequelize.define('fileMetadata', {
     id: {
       type: DataTypes.STRING(36),
@@ -21,3 +21,5 @@ export default (sequelize, DataTypes) => {
     timestamps: false
   })
 }
+
+export default fileMetadata
