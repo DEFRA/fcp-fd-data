@@ -5,10 +5,10 @@ import processFileMetadata from './messages/process-file-metadata.js'
 const processInboundMessage = async (message, receiver) => {
   try {
     switch (true) {
-      case message.body.hasOwnProperty(COMMS_EVENT): //eslint-disable-line
+      case Object.hasOwn(message.body, COMMS_EVENT):
         await processCommsMessage(message, receiver)
         break
-      case message.body.hasOwnProperty(FILE_METADATA): //eslint-disable-line
+      case Object.hasOwn(message.body, FILE_METADATA):
         await processFileMetadata(message, receiver)
         break
       default:

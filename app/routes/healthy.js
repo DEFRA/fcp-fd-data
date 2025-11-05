@@ -1,9 +1,11 @@
-const route = {
+import { constants as httpConstants } from 'node:http2'
+
+const healthy = {
   method: 'GET',
   path: '/healthy',
-  handler: (request, h) => {
-    return h.response('ok').code(200)
+  handler: (_request, h) => {
+    return h.response('ok').code(httpConstants.HTTP_STATUS_OK)
   }
 }
 
-export default route
+export default healthy
